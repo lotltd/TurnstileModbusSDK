@@ -102,7 +102,12 @@ type
     UpDown15: TUpDown;
     edExitRed_time: TEdit;
     UpDown16: TUpDown;
-    BitBtn1: TBitBtn;
+    btnEnterPass: TBitBtn;
+    btnExitPass: TBitBtn;
+    edCardASCII: TEdit;
+    Label23: TLabel;
+    edCard2ASCII: TEdit;
+    Label24: TLabel;
     procedure btnStartClick(Sender: TObject);
     procedure rgEnterClick(Sender: TObject);
     procedure rgExitClick(Sender: TObject);
@@ -116,6 +121,8 @@ type
     procedure btnEnterRedClick(Sender: TObject);
     procedure btnExitGreenClick(Sender: TObject);
     procedure btnExitRedClick(Sender: TObject);
+    procedure btnEnterPassClick(Sender: TObject);
+    procedure btnExitPassClick(Sender: TObject);
   private
     FController: TController;
   public
@@ -158,6 +165,12 @@ begin
   FController.SetEnterGreen_time(StrToInt(edAddr.Text), StrToInt(edEnterGreen_time.Text));
 end;
 
+procedure TForm1.btnEnterPassClick(Sender: TObject);
+begin
+  if FController = nil then exit;
+  FController.SetEnter(StrToInt(edAddr.Text), 1);
+end;
+
 procedure TForm1.btnEnterRedClick(Sender: TObject);
 begin
   if FController = nil then exit;
@@ -172,6 +185,12 @@ begin
   FController.SetExitGreen_t(StrToInt(edAddr.Text), StrToInt(edExitGreen_t.Text));
   FController.SetExitGreen_t2(StrToInt(edAddr.Text), StrToInt(edExitGreen_t2.Text));
   FController.SetExitGreen_time(StrToInt(edAddr.Text), StrToInt(edExitGreen_time.Text));
+end;
+
+procedure TForm1.btnExitPassClick(Sender: TObject);
+begin
+  if FController = nil then exit;
+  FController.SetExit(StrToInt(edAddr.Text), 1);
 end;
 
 procedure TForm1.btnExitRedClick(Sender: TObject);
@@ -274,7 +293,7 @@ var
   IsNew: boolean;
   Card: Tar;
   i: byte;
-  count: byte;
+  count: word;
 begin
   if FController = nil then exit;
   FController.GetEnter(StrToInt(edAddr.Text), n);
@@ -325,30 +344,38 @@ begin
 
   edCard.Text := '';
   edCard2.Text := '';
+  edCardASCII.Text := '';
+  edCard2ASCII.Text := '';
 
   if FController = nil then exit;
   FController.GetEnterCard(StrToInt(edAddr.Text), IsNew, Card, count);
-  for i := 0 to count - 1 do
+  if count > 0 then
   begin
-    try
-//      edCard.Text := edCard.Text + chr(Card[i]) + ' ';
-      edCard.Text := edCard.Text + '$' + IntToHex(Card[i], 2) + ' ';
-    except
+    for i := 0 to count - 1 do
+    begin
+      try
+        edCardASCII.Text := edCardASCII.Text + chr(Card[i]) + ' ';
+        edCard.Text := edCard.Text + '$' + IntToHex(Card[i], 2) + ' ';
+      except
+      end;
     end;
+    edCard.Text := trim(edCard.Text);
   end;
-  edCard.Text := trim(edCard.Text);
 
   if FController = nil then exit;
   FController.GetExitCard(StrToInt(edAddr.Text), IsNew, Card, count);
-  for i := 0 to count - 1 do
+  if count > 0 then
   begin
-    try
-//      edCard2.Text := edCard2.Text + chr(Card[i]) + ' ';
-      edCard2.Text := edCard2.Text + '$' + IntToHex(Card[i], 2) + ' ';
-    except
+    for i := 0 to count - 1 do
+    begin
+      try
+        edCard2ASCII.Text := edCard2ASCII.Text + chr(Card[i]) + ' ';
+        edCard2.Text := edCard2.Text + '$' + IntToHex(Card[i], 2) + ' ';
+      except
+      end;
     end;
+    edCard2.Text := trim(edCard2.Text);
   end;
-  edCard2.Text := trim(edCard2.Text);
 end;
 
 end.

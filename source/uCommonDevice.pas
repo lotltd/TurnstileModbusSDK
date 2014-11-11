@@ -56,7 +56,7 @@ begin
       1: Ident.Product := s;
       2: Ident.Version := s;
       3: Ident.VendorURL := s;
-    else
+      else
     end;
 
     if dataout[6] <> #$FF then break; // больше нечего тащить
@@ -71,7 +71,6 @@ begin
     Result := true;
   except
   end;
-
   FModbus := nil;
 end;
 
@@ -134,9 +133,7 @@ begin
   try
     result := ReadDeviceIdentification(Adr, FIdent);
     if result <> merNone then
-    begin
       FModbus.Destroy;
-    end;
   except
     FModbus.Destroy;
   end;

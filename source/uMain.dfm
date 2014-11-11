@@ -144,7 +144,7 @@ object Form1: TForm1
       object rgEnter: TRadioGroup
         Left = 8
         Top = 15
-        Width = 217
+        Width = 247
         Height = 31
         Columns = 2
         ItemIndex = 0
@@ -352,13 +352,14 @@ object Form1: TForm1
           TabOrder = 5
         end
       end
-      object BitBtn1: TBitBtn
-        Left = 231
+      object btnEnterPass: TBitBtn
+        Left = 261
         Top = 20
         Width = 102
         Height = 25
         Caption = #1054#1076#1085#1086#1082#1088#1072#1090#1085#1099#1081
         TabOrder = 3
+        OnClick = btnEnterPassClick
       end
     end
     object GroupBox8: TGroupBox
@@ -371,7 +372,7 @@ object Form1: TForm1
       object rgExit: TRadioGroup
         Left = 8
         Top = 15
-        Width = 358
+        Width = 247
         Height = 31
         Columns = 2
         ItemIndex = 0
@@ -579,6 +580,15 @@ object Form1: TForm1
           TabOrder = 5
         end
       end
+      object btnExitPass: TBitBtn
+        Left = 261
+        Top = 20
+        Width = 102
+        Height = 25
+        Caption = #1054#1076#1085#1086#1082#1088#1072#1090#1085#1099#1081
+        TabOrder = 3
+        OnClick = btnExitPassClick
+      end
     end
     object rgPassState: TRadioGroup
       Left = 770
@@ -621,16 +631,30 @@ object Form1: TForm1
     object Label10: TLabel
       Left = 330
       Top = 79
-      Width = 53
+      Width = 50
       Height = 13
-      Caption = #1050#1072#1088#1090#1086#1095#1082#1072':'
+      Caption = #1042#1093#1086#1076' hex:'
     end
     object Label11: TLabel
+      Left = 331
+      Top = 133
+      Width = 58
+      Height = 13
+      Caption = #1042#1099#1093#1086#1076' hex:'
+    end
+    object Label23: TLabel
       Left = 330
       Top = 106
-      Width = 59
+      Width = 60
       Height = 13
-      Caption = #1050#1072#1088#1090#1086#1095#1082#1072'2:'
+      Caption = #1042#1093#1086#1076' ASCII:'
+    end
+    object Label24: TLabel
+      Left = 330
+      Top = 160
+      Width = 68
+      Height = 13
+      Caption = #1042#1099#1093#1086#1076' ASCII:'
     end
     object edEnterCount: TEdit
       Left = 156
@@ -676,17 +700,17 @@ object Form1: TForm1
       end
     end
     object edCard: TEdit
-      Left = 395
+      Left = 427
       Top = 79
-      Width = 248
+      Width = 600
       Height = 21
       ReadOnly = True
       TabOrder = 3
     end
     object edCard2: TEdit
-      Left = 395
-      Top = 106
-      Width = 248
+      Left = 428
+      Top = 133
+      Width = 600
       Height = 21
       ReadOnly = True
       TabOrder = 4
@@ -758,6 +782,22 @@ object Form1: TForm1
           #1055#1088#1086#1093#1086#1076' '#1085#1072#1095#1072#1090)
         TabOrder = 1
       end
+    end
+    object edCardASCII: TEdit
+      Left = 427
+      Top = 106
+      Width = 600
+      Height = 21
+      ReadOnly = True
+      TabOrder = 7
+    end
+    object edCard2ASCII: TEdit
+      Left = 427
+      Top = 160
+      Width = 600
+      Height = 21
+      ReadOnly = True
+      TabOrder = 8
     end
   end
   object GroupBox7: TGroupBox

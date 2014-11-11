@@ -14,25 +14,38 @@ type
     function ReadData(Addr: byte; RegAddr: word; var Ans: ansistring): TModbusError; overload;
     function WriteState(Addr: byte; RegAddr: word; Value: word; Value2: word = 0): TModbusError;
   public
-    function GetAntiPanicState(Addr: byte; var Value: word): TModbusError;
-    function GetEnterCard(Addr: byte; var IsNew: boolean; var CardNum: TAr; var Count: byte): TModbusError;
-    function GetExitCard(Addr: byte; var IsNew: boolean; var CardNum: TAr; var Count: byte): TModbusError;
+    function GetEnterCard(Addr: byte; var IsNew: boolean; var CardNum: TAr; var Count: word): TModbusError;
+    function GetExitCard(Addr: byte; var IsNew: boolean; var CardNum: TAr; var Count: word): TModbusError;
+    //Состояние входа
+    //0	– проход закрыт;
+    //(1-$FFFЕ) – количество разрешенных проходов
+    //$FFFF – разрешен свободный проход
     function GetEnter(Addr: byte; var Value: word): TModbusError;
+    //Состояние выхода
+    //0	– проход закрыт;
+    //(1-$FFFЕ) – количество разрешенных проходов
+    //$FFFF – разрешен свободный проход
     function GetExit(Addr: byte; var Value: word): TModbusError;
+    //0 - нормальный режим
+    //1 - режим Блокировки
+    //2 - режим Антипаники
     function GetPassState(Addr: byte; var Value: word): TModbusError;
+    //Ошибки:
+    //0 – Ошибок нет
+    //не 0 – Наличие ошибок в системе
     function GetErrorState(Addr: byte; var Value: word): TModbusError;
     //Количество проходов в направлении вход
     function GetEnterCount(Addr: byte; var Value: longword): TModbusError;
-    //режим входа
+    //Количество проходов в направлении выход
+    function GetExitCount(Addr: byte; var Value: longword): TModbusError;
+    //Состояние входа
     //0 - Проход в направлении вход свободен
     //Не 0 – позиция(наличие) объекта с направления вход
     function GetEnterState(Addr: byte; var Value: word): TModbusError;
-    //режим выхода
+    //Состояние выхода
     //0 - Проход в направлении выход свободен
     //Не 0 – позиция(наличие) объекта с направления выход
     function GetExitState(Addr: byte; var Value: word): TModbusError;
-    //Количество проходов в направлении выход
-    function GetExitCount(Addr: byte; var Value: longword): TModbusError;
 
     //Разрешение накопления проходов
     //0 – Накопление проходов запрещено
@@ -42,8 +55,10 @@ type
     //1 - Установить режим Блокировки
     //2 - Установить режим Антипаники
     function SetPassState(Addr: byte; State: byte): TModbusError;
-    //скорость обмена контроллера
-    function SetControllerSpeed(Addr: byte; State: longword): TModbusError;
+    //скорость обмена между контроллером турникета и контроллером верхнего уровня  деленная на 100
+    function SetControllerSpeed(Addr: byte; Value: longword): TModbusError;
+    //скорость обмена между контроллером турникета и сканером деленная на 100
+    function SetScanerSpeed(Addr: byte; Value: word): TModbusError;
     //0	– проход закрыт;
     //(1-$FFFЕ) – количество разрешенных проходов
     //$FFFF – разрешен свободный проход
@@ -52,7 +67,6 @@ type
     //(1-$FFFЕ) – количество разрешенных проходов
     //$FFFF – разрешен свободный проход
     function SetExit(Addr: byte; State: word): TModbusError;
-
     //Время необходимое для прохода после разрешения, секунд
     function SetAfterPermissionPassTime(Addr: byte; State: byte): TModbusError;
     //Время необходимое после начала прохода, секунд
@@ -93,11 +107,6 @@ type
 
 implementation
 
-function TController.GetAntiPanicState(Addr: byte; var Value: word): TModbusError;
-begin
-  result :=  ReadData(addr, $52, value);
-end;
-
 function TController.GetErrorState(Addr: byte; var Value: word): TModbusError;
 begin
   result := ReadData(addr, $48, value);
@@ -109,17 +118,16 @@ begin
 end;
 
 function TController.GetEnterCard(Addr: byte; var IsNew: boolean;
-  var CardNum: TAr; var Count: byte): TModbusError;
+  var CardNum: TAr; var Count: word): TModbusError;
 var
   s: ansistring;
-  value: word;
 begin
   FillChar(CardNum, SizeOf(CardNum), #0);
-  result := ReadData(addr, $100, value);
-  if value <> 0 then
+  result := ReadData(addr, $100, count);
+  if count <> 0 then
   begin
-    IsNew := Boolean(hi(value));
-    count := lo(value);
+    IsNew := Boolean(hi(count));
+    count := lo(count);
     result := ReadData(addr, $101, s);
     move(s[1], CardNum[0], count);
   end
@@ -150,17 +158,16 @@ begin
 end;
 
 function TController.GetExitCard(Addr: byte; var IsNew: boolean;
-  var CardNum: TAr; var Count: byte): TModbusError;
+  var CardNum: TAr; var Count: word): TModbusError;
 var
   s: ansistring;
-  value: word;
 begin
   FillChar(CardNum, SizeOf(CardNum), #0);
-  result := ReadData(addr, $200, value);
-  if value <> 0 then
+  result := ReadData(addr, $200, count);
+  if count <> 0 then
   begin
-    IsNew := Boolean(hi(value));
-    count := lo(value);
+    IsNew := Boolean(hi(count));
+    count := lo(count);
     result := ReadData(addr, $201, s);
     move(s[1], CardNum[0], count);
   end
@@ -236,11 +243,11 @@ begin
     ans := 0;
 end;
 
-function TController.SetControllerSpeed(Addr: byte; State: longword): TModbusError;
+function TController.SetControllerSpeed(Addr: byte; Value: longword): TModbusError;
 var
   speed, speed2: longint;
 begin
-  speed := trunc(state / 100);
+  speed := trunc(value / 100);
   speed2 := not speed;
   result := WriteState(addr, $4310 , speed, speed2);
 end;
@@ -339,6 +346,14 @@ end;
 function TController.SetPassState(Addr, State: byte): TModbusError;
 begin
   result := WriteState(addr, $3000, state);
+end;
+
+function TController.SetScanerSpeed(Addr: byte; Value: word): TModbusError;
+var
+  speed: word;
+begin
+  speed := trunc(value / 100);
+  result := WriteState(addr, $4350, speed);
 end;
 
 function TController.WriteState(Addr: byte; RegAddr: word; Value: word; Value2: word = 0): TModbusError;
