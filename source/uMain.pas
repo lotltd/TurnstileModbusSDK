@@ -108,6 +108,10 @@ type
     Label23: TLabel;
     edCard2ASCII: TEdit;
     Label24: TLabel;
+    GroupBox15: TGroupBox;
+    Label25: TLabel;
+    cbScannerSpeed: TComboBox;
+    btnSepScannerSpeed: TBitBtn;
     procedure btnStartClick(Sender: TObject);
     procedure rgEnterClick(Sender: TObject);
     procedure rgExitClick(Sender: TObject);
@@ -123,6 +127,7 @@ type
     procedure btnExitRedClick(Sender: TObject);
     procedure btnEnterPassClick(Sender: TObject);
     procedure btnExitPassClick(Sender: TObject);
+    procedure btnSepScannerSpeedClick(Sender: TObject);
   private
     FController: TController;
   public
@@ -201,11 +206,28 @@ begin
   FController.SetExitRed_time(StrToInt(edAddr.Text), StrToInt(edExitRed_time.Text));
 end;
 
-procedure TForm1.btnSetSpeedClick(Sender: TObject);
+procedure TForm1.btnSepScannerSpeedClick(Sender: TObject);
+var
+  Error: TModbusError;
 begin
   if FController = nil then exit;
-  if MessageDlg('Требуется перезагрузка контроллера', mtWarning, [mbOk, mbCancel], 0) = mrOk then
-     FController.SetControllerSpeed(StrToInt(edAddr.Text), 115200);
+  error := FController.SetScannerSpeed(StrToInt(edAddr.Text), StrToInt(cbScannerSpeed.Text));
+  if error = merNone then
+    MessageDlg('Требуется перезагрузка контроллера', mtWarning, [mbOk], 0)
+  else
+    MessageDlg(StrModbusError[error], mtError, [mbOk], 0);
+end;
+
+procedure TForm1.btnSetSpeedClick(Sender: TObject);
+var
+  Error: TModbusError;
+begin
+  if FController = nil then exit;
+  error :=  FController.SetControllerSpeed(StrToInt(edAddr.Text), StrToInt(cbSpeed.Text));
+  if error = merNone then
+    MessageDlg('Требуется перезагрузка контроллера', mtWarning, [mbOk], 0)
+  else
+    MessageDlg(StrModbusError[error], mtError, [mbOk], 0);
 end;
 
 procedure TForm1.btnStartClick(Sender: TObject);

@@ -80,7 +80,7 @@ object Form1: TForm1
       Width = 56
       Height = 21
       NumbersOnly = True
-      TabOrder = 0
+      TabOrder = 2
       Text = '1'
     end
     object UpDown2: TUpDown
@@ -92,7 +92,7 @@ object Form1: TForm1
       Min = 1
       Max = 255
       Position = 1
-      TabOrder = 1
+      TabOrder = 3
     end
     object edAfterStartPassTime: TEdit
       Left = 1001
@@ -100,7 +100,7 @@ object Form1: TForm1
       Width = 56
       Height = 21
       NumbersOnly = True
-      TabOrder = 2
+      TabOrder = 4
       Text = '1'
     end
     object UpDown3: TUpDown
@@ -112,7 +112,7 @@ object Form1: TForm1
       Min = 1
       Max = 255
       Position = 1
-      TabOrder = 3
+      TabOrder = 5
     end
     object edEngineTime: TEdit
       Left = 1001
@@ -120,7 +120,7 @@ object Form1: TForm1
       Width = 56
       Height = 21
       NumbersOnly = True
-      TabOrder = 4
+      TabOrder = 6
       Text = '1'
     end
     object UpDown6: TUpDown
@@ -132,7 +132,7 @@ object Form1: TForm1
       Min = 1
       Max = 255
       Position = 1
-      TabOrder = 5
+      TabOrder = 7
     end
     object GroupBox6: TGroupBox
       Left = 8
@@ -140,7 +140,7 @@ object Form1: TForm1
       Width = 375
       Height = 271
       Caption = #1042#1093#1086#1076
-      TabOrder = 6
+      TabOrder = 0
       object rgEnter: TRadioGroup
         Left = 8
         Top = 15
@@ -160,7 +160,7 @@ object Form1: TForm1
         Width = 358
         Height = 105
         Caption = #1047#1077#1083#1077#1085#1099#1081
-        TabOrder = 1
+        TabOrder = 2
         object Label3: TLabel
           Left = 8
           Top = 78
@@ -210,7 +210,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 1
+          TabOrder = 5
         end
         object edEnterGreen_t2: TEdit
           Left = 253
@@ -250,7 +250,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 5
+          TabOrder = 1
         end
       end
       object GroupBox12: TGroupBox
@@ -259,7 +259,7 @@ object Form1: TForm1
         Width = 358
         Height = 105
         Caption = #1050#1088#1072#1089#1085#1099#1081
-        TabOrder = 2
+        TabOrder = 3
         object Label8: TLabel
           Left = 8
           Top = 78
@@ -309,7 +309,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 1
+          TabOrder = 5
         end
         object edEnterRed_t2: TEdit
           Left = 253
@@ -349,7 +349,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 5
+          TabOrder = 1
         end
       end
       object btnEnterPass: TBitBtn
@@ -358,7 +358,7 @@ object Form1: TForm1
         Width = 102
         Height = 25
         Caption = #1054#1076#1085#1086#1082#1088#1072#1090#1085#1099#1081
-        TabOrder = 3
+        TabOrder = 1
         OnClick = btnEnterPassClick
       end
     end
@@ -368,7 +368,7 @@ object Form1: TForm1
       Width = 375
       Height = 271
       Caption = #1042#1099#1093#1086#1076
-      TabOrder = 7
+      TabOrder = 1
       object rgExit: TRadioGroup
         Left = 8
         Top = 15
@@ -388,7 +388,7 @@ object Form1: TForm1
         Width = 358
         Height = 105
         Caption = #1047#1077#1083#1077#1085#1099#1081
-        TabOrder = 1
+        TabOrder = 2
         object Label17: TLabel
           Left = 8
           Top = 78
@@ -438,7 +438,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 1
+          TabOrder = 5
         end
         object edExitGreen_t2: TEdit
           Left = 253
@@ -478,7 +478,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 5
+          TabOrder = 1
         end
       end
       object GroupBox14: TGroupBox
@@ -487,7 +487,7 @@ object Form1: TForm1
         Width = 358
         Height = 105
         Caption = #1050#1088#1072#1089#1085#1099#1081
-        TabOrder = 2
+        TabOrder = 3
         object Label20: TLabel
           Left = 8
           Top = 78
@@ -537,7 +537,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 1
+          TabOrder = 5
         end
         object edExitRed_t2: TEdit
           Left = 253
@@ -577,7 +577,7 @@ object Form1: TForm1
           Min = 1
           Max = 255
           Position = 1
-          TabOrder = 5
+          TabOrder = 1
         end
       end
       object btnExitPass: TBitBtn
@@ -586,7 +586,7 @@ object Form1: TForm1
         Width = 102
         Height = 25
         Caption = #1054#1076#1085#1086#1082#1088#1072#1090#1085#1099#1081
-        TabOrder = 3
+        TabOrder = 1
         OnClick = btnExitPassClick
       end
     end
@@ -618,7 +618,6 @@ object Form1: TForm1
       Width = 134
       Height = 13
       Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1093#1086#1076#1086#1074' '#1085#1072' '#1074#1093#1086#1076':'
-      Enabled = False
     end
     object Label6: TLabel
       Left = 8
@@ -626,7 +625,6 @@ object Form1: TForm1
       Width = 142
       Height = 13
       Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1093#1086#1076#1086#1074' '#1085#1072' '#1074#1099#1093#1086#1076':'
-      Enabled = False
     end
     object Label10: TLabel
       Left = 330
@@ -688,7 +686,6 @@ object Form1: TForm1
         Width = 122
         Height = 13
         Caption = #1044#1074#1080#1075#1072#1090#1077#1083#1100' '#1073#1083#1086#1082#1080#1088#1086#1074#1072#1085':'
-        Enabled = False
       end
       object cbEngineBlockState: TCheckBox
         Left = 145
@@ -704,6 +701,7 @@ object Form1: TForm1
       Top = 79
       Width = 600
       Height = 21
+      Enabled = False
       ReadOnly = True
       TabOrder = 3
     end
@@ -712,6 +710,7 @@ object Form1: TForm1
       Top = 133
       Width = 600
       Height = 21
+      Enabled = False
       ReadOnly = True
       TabOrder = 4
     end
@@ -788,6 +787,7 @@ object Form1: TForm1
       Top = 106
       Width = 600
       Height = 21
+      Enabled = False
       ReadOnly = True
       TabOrder = 7
     end
@@ -796,6 +796,7 @@ object Form1: TForm1
       Top = 160
       Width = 600
       Height = 21
+      Enabled = False
       ReadOnly = True
       TabOrder = 8
     end
@@ -813,7 +814,7 @@ object Form1: TForm1
       Width = 302
       Height = 44
       Caption = #1040#1076#1088#1077#1089':'
-      TabOrder = 1
+      TabOrder = 0
       object edAddr: TEdit
         Left = 11
         Top = 18
@@ -839,7 +840,7 @@ object Form1: TForm1
       Width = 302
       Height = 81
       Caption = 'COM'
-      TabOrder = 0
+      TabOrder = 1
       object Label1: TLabel
         Left = 8
         Top = 21
@@ -922,11 +923,49 @@ object Form1: TForm1
         OnClick = btnSetSpeedClick
       end
     end
+    object GroupBox15: TGroupBox
+      Left = 311
+      Top = 64
+      Width = 306
+      Height = 81
+      Caption = #1057#1082#1086#1088#1086#1089#1090#1100' '#1086#1073#1084#1077#1085#1072' '#1089#1086' '#1089#1082#1072#1085#1077#1088#1086#1084
+      TabOrder = 2
+      object Label25: TLabel
+        Left = 8
+        Top = 19
+        Width = 52
+        Height = 13
+        Caption = #1057#1082#1086#1088#1086#1089#1090#1100':'
+      end
+      object cbScannerSpeed: TComboBox
+        Left = 67
+        Top = 19
+        Width = 83
+        Height = 21
+        Style = csDropDownList
+        ItemIndex = 2
+        TabOrder = 0
+        Text = '9600'
+        Items.Strings = (
+          '2400'
+          '4800'
+          '9600')
+      end
+      object btnSepScannerSpeed: TBitBtn
+        Left = 172
+        Top = 19
+        Width = 125
+        Height = 25
+        Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1086#1088#1086#1089#1090#1100
+        TabOrder = 1
+        OnClick = btnSepScannerSpeedClick
+      end
+    end
   end
   object Timer1: TTimer
     Enabled = False
     OnTimer = Timer1Timer
-    Left = 456
-    Top = 56
+    Left = 816
+    Top = 64
   end
 end

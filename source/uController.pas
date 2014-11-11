@@ -14,7 +14,9 @@ type
     function ReadData(Addr: byte; RegAddr: word; var Ans: ansistring): TModbusError; overload;
     function WriteState(Addr: byte; RegAddr: word; Value: word; Value2: word = 0): TModbusError;
   public
+    //Данные сканера входа
     function GetEnterCard(Addr: byte; var IsNew: boolean; var CardNum: TAr; var Count: word): TModbusError;
+    //Данные сканера выхода
     function GetExitCard(Addr: byte; var IsNew: boolean; var CardNum: TAr; var Count: word): TModbusError;
     //Состояние входа
     //0	– проход закрыт;
@@ -58,7 +60,7 @@ type
     //скорость обмена между контроллером турникета и контроллером верхнего уровня  деленная на 100
     function SetControllerSpeed(Addr: byte; Value: longword): TModbusError;
     //скорость обмена между контроллером турникета и сканером деленная на 100
-    function SetScanerSpeed(Addr: byte; Value: word): TModbusError;
+    function SetScannerSpeed(Addr: byte; Value: word): TModbusError;
     //0	– проход закрыт;
     //(1-$FFFЕ) – количество разрешенных проходов
     //$FFFF – разрешен свободный проход
@@ -348,7 +350,7 @@ begin
   result := WriteState(addr, $3000, state);
 end;
 
-function TController.SetScanerSpeed(Addr: byte; Value: word): TModbusError;
+function TController.SetScannerSpeed(Addr: byte; Value: word): TModbusError;
 var
   speed: word;
 begin
