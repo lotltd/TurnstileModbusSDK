@@ -1,4 +1,4 @@
 TurnstileModbusSDK
 ==================
 
-SDK for our modbos turnstiles
+SDK for our modbus turnstiles
