@@ -55,8 +55,8 @@ type
     rgExitState: TRadioGroup;
     GroupBox10: TGroupBox;
     rgEnterState: TRadioGroup;
-    rgEnterPassState: TRadioGroup;
     rgExitPassState: TRadioGroup;
+    rgEnterPassState: TRadioGroup;
     rgPassState: TRadioGroup;
     GroupBox11: TGroupBox;
     Label3: TLabel;
@@ -165,9 +165,8 @@ end;
 procedure TForm1.btnEnterGreenClick(Sender: TObject);
 begin
   if FController = nil then exit;
-  FController.SetEnterGreen_t(StrToInt(edAddr.Text), StrToInt(edEnterGreen_t.Text));
-  FController.SetEnterGreen_t2(StrToInt(edAddr.Text), StrToInt(edEnterGreen_t2.Text));
-  FController.SetEnterGreen_time(StrToInt(edAddr.Text), StrToInt(edEnterGreen_time.Text));
+  FController.SetEnterGreen(StrToInt(edAddr.Text), StrToInt(edEnterGreen_t.Text),
+    StrToInt(edEnterGreen_t2.Text), StrToInt(edEnterGreen_time.Text))
 end;
 
 procedure TForm1.btnEnterPassClick(Sender: TObject);
@@ -179,17 +178,15 @@ end;
 procedure TForm1.btnEnterRedClick(Sender: TObject);
 begin
   if FController = nil then exit;
-  FController.SetEnterRed_t(StrToInt(edAddr.Text), StrToInt(edEnterRed_t.Text));
-  FController.SetEnterRed_t2(StrToInt(edAddr.Text), StrToInt(edEnterRed_t2.Text));
-  FController.SetEnterRed_time(StrToInt(edAddr.Text), StrToInt(edEnterRed_time.Text));
+  FController.SetEnterRed(StrToInt(edAddr.Text), StrToInt(edEnterRed_t.Text),
+    StrToInt(edEnterRed_t2.Text), StrToInt(edEnterRed_time.Text))
 end;
 
 procedure TForm1.btnExitGreenClick(Sender: TObject);
 begin
   if FController = nil then exit;
-  FController.SetExitGreen_t(StrToInt(edAddr.Text), StrToInt(edExitGreen_t.Text));
-  FController.SetExitGreen_t2(StrToInt(edAddr.Text), StrToInt(edExitGreen_t2.Text));
-  FController.SetExitGreen_time(StrToInt(edAddr.Text), StrToInt(edExitGreen_time.Text));
+  FController.SetExitGreen(StrToInt(edAddr.Text), StrToInt(edExitGreen_t.Text),
+    StrToInt(edExitGreen_t2.Text), StrToInt(edExitGreen_time.Text))
 end;
 
 procedure TForm1.btnExitPassClick(Sender: TObject);
@@ -201,9 +198,8 @@ end;
 procedure TForm1.btnExitRedClick(Sender: TObject);
 begin
   if FController = nil then exit;
-  FController.SetExitRed_t(StrToInt(edAddr.Text), StrToInt(edExitRed_t.Text));
-  FController.SetExitRed_t2(StrToInt(edAddr.Text), StrToInt(edExitRed_t2.Text));
-  FController.SetExitRed_time(StrToInt(edAddr.Text), StrToInt(edExitRed_time.Text));
+  FController.SetExitRed(StrToInt(edAddr.Text), StrToInt(edExitRed_t.Text),
+    StrToInt(edExitRed_t2.Text), StrToInt(edExitRed_time.Text))
 end;
 
 procedure TForm1.btnSepScannerSpeedClick(Sender: TObject);
@@ -322,6 +318,8 @@ begin
   if n = 0 then
     rgEnterState.ItemIndex := 0
   else if n = $FFFF then
+    rgEnterState.ItemIndex := 2
+  else
     rgEnterState.ItemIndex := 1;
   Application.ProcessMessages;
 
@@ -330,15 +328,9 @@ begin
   if n = 0 then
     rgExitState.ItemIndex := 0
   else if n = $FFFF then
-    rgExitState.ItemIndex := 1;
-  Application.ProcessMessages;
-
-  if FController = nil then exit;
-  FController.GetExitState(StrToInt(edAddr.Text), n);
-  if n = 0 then
-    rgExitPassState.ItemIndex := 0
+    rgExitState.ItemIndex := 2
   else
-    rgExitPassState.ItemIndex := 1;
+    rgExitState.ItemIndex := 1;
   Application.ProcessMessages;
 
   if FController = nil then exit;
@@ -347,6 +339,14 @@ begin
     rgEnterPassState.ItemIndex := 0
   else
     rgEnterPassState.ItemIndex := 1;
+  Application.ProcessMessages;
+
+  if FController = nil then exit;
+  FController.GetExitState(StrToInt(edAddr.Text), n);
+  if n = 0 then
+    rgExitPassState.ItemIndex := 0
+  else
+    rgExitPassState.ItemIndex := 1;
   Application.ProcessMessages;
 
   if FController = nil then exit;
@@ -364,15 +364,12 @@ begin
   cbEngineBlockState.Checked := Boolean(n);
   Application.ProcessMessages;
 
-  edCard.Text := '';
-  edCard2.Text := '';
-  edCardASCII.Text := '';
-  edCard2ASCII.Text := '';
-
   if FController = nil then exit;
   FController.GetEnterCard(StrToInt(edAddr.Text), IsNew, Card, count);
-  if count > 0 then
+  if IsNew then
   begin
+    edCard.Text := '';
+    edCardASCII.Text := '';
     for i := 0 to count - 1 do
     begin
       try
@@ -386,8 +383,10 @@ begin
 
   if FController = nil then exit;
   FController.GetExitCard(StrToInt(edAddr.Text), IsNew, Card, count);
-  if count > 0 then
+  if IsNew then
   begin
+    edCard2.Text := '';
+    edCard2ASCII.Text := '';
     for i := 0 to count - 1 do
     begin
       try

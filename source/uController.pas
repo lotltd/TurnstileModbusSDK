@@ -11,8 +11,8 @@ type
   TController = class(TCommonModbusDevice)
   private
     function ReadData(Addr: byte; RegAddr: word; var Ans: word): TModbusError; overload;
-    function ReadData(Addr: byte; RegAddr: word; var Ans: ansistring): TModbusError; overload;
-    function WriteState(Addr: byte; RegAddr: word; Value: word; Value2: word = 0): TModbusError;
+    function ReadData(Addr: byte; RegAddr: word; var Ans: ansistring; Count: byte = 1): TModbusError; overload;
+    function WriteState(Addr: byte; RegAddr: word; Value: array of word): TModbusError;
   public
     //Данные сканера входа
     function GetEnterCard(Addr: byte; var IsNew: boolean; var CardNum: TAr; var Count: word): TModbusError;
@@ -77,34 +77,25 @@ type
     function SetEngineTime(Addr: byte; State: byte): TModbusError;
 
     //Зеленый Вход: длительность включения сигнала, в 100 мс интервалах (t)
-    function SetEnterGreen_t(Addr: byte; Value: word): TModbusError;
-    //Зеленый Вход: длительность выключения сигнала, в 100 мс интервалах (T)
-    function SetEnterGreen_t2(Addr: byte; Value: word): TModbusError;
-    //Зеленый Вход: Общая длительность цикла индикации, в 100 мс интервалах (time)
+    //длительность выключения сигнала, в 100 мс интервалах (T)
+    //Общая длительность цикла индикации, в 100 мс интервалах (time)
     //Значение 0xFFFF – Соответствуют бесконечному времени.
-    function SetEnterGreen_time(Addr: byte; Value: word): TModbusError;
+    function SetEnterGreen(Addr: byte; OnTime, OffTime, LengthTime: word): TModbusError;
     //Красный Вход: длительность включения сигнала, в 100 мс интервалах (t)
-    function SetEnterRed_t(Addr: byte; Value: word): TModbusError;
-    //Красный Вход: длительность выключения сигнала, в 100 мс интервалах (T)
-    function SetEnterRed_t2(Addr: byte; Value: word): TModbusError;
-    //Красный Вход: Общая длительность цикла индикации, в 100 мс интервалах (time)
+    //длительность выключения сигнала, в 100 мс интервалах (T)
+    //Общая длительность цикла индикации, в 100 мс интервалах (time)
     //Значение 0xFFFF – Соответствуют бесконечному времени.
-    function SetEnterRed_time(Addr: byte; Value: word): TModbusError;
-
+    function SetEnterRed(Addr: byte; OnTime, OffTime, LengthTime: word): TModbusError;
     //Зеленый Выход: длительность включения сигнала, в 100 мс интервалах (t)
-    function SetExitGreen_t(Addr: byte; Value: word): TModbusError;
-    //Зеленый Выход: длительность выключения сигнала, в 100 мс интервалах (T)
-    function SetExitGreen_t2(Addr: byte; Value: word): TModbusError;
-    //Зеленый Выход: Общая длительность цикла индикации, в 100 мс интервалах (time)
+    //длительность выключения сигнала, в 100 мс интервалах (T)
+    //Общая длительность цикла индикации, в 100 мс интервалах (time)
     //Значение 0xFFFF – Соответствуют бесконечному времени.
-    function SetExitGreen_time(Addr: byte; Value: word): TModbusError;
+    function SetExitGreen(Addr: byte; OnTime, OffTime, LengthTime: word): TModbusError;
     //Красный Выход: длительность включения сигнала, в 100 мс интервалах (t)
-    function SetExitRed_t(Addr: byte; Value: word): TModbusError;
-    //Красный Выход: длительность выключения сигнала, в 100 мс интервалах (T)
-    function SetExitRed_t2(Addr: byte; Value: word): TModbusError;
-    //Красный Выход: Общая длительность цикла индикации, в 100 мс интервалах (time)
+    //длительность выключения сигнала, в 100 мс интервалах (T)
+    //Общая длительность цикла индикации, в 100 мс интервалах (time)
     //Значение 0xFFFF – Соответствуют бесконечному времени.
-    function SetExitRed_time(Addr: byte; Value: word): TModbusError;
+    function SetExitRed(Addr: byte; OnTime, OffTime, LengthTime: word): TModbusError;
   end;
 
 implementation
@@ -126,11 +117,14 @@ var
 begin
   FillChar(CardNum, SizeOf(CardNum), #0);
   result := ReadData(addr, $100, count);
-  if count <> 0 then
+  IsNew := Boolean(hi(count));
+  count := lo(count);
+
+  if (count <> 0) and IsNew then
   begin
-    IsNew := Boolean(hi(count));
-    count := lo(count);
-    result := ReadData(addr, $101, s);
+    result := ReadData(addr, $101, s, 16);
+    if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
+      count := count - 2; // -$0D$0A
     move(s[1], CardNum[0], count);
   end
 end;
@@ -139,10 +133,6 @@ function TController.GetEnterCount(Addr: byte; var Value: longword): TModbusErro
 var
   n: word;
 begin
-//  ReadData(addr, $44, n);
-//  value := n;
-//  result := ReadData(1, $45, n);
-//  value := value shl 16 + n;
   ReadData(addr, $45, n);
   value := n;
   result := ReadData(1, $44, n);
@@ -166,11 +156,14 @@ var
 begin
   FillChar(CardNum, SizeOf(CardNum), #0);
   result := ReadData(addr, $200, count);
-  if count <> 0 then
+  IsNew := Boolean(hi(count));
+  count := lo(count);
+
+  if (count <> 0) and IsNew then
   begin
-    IsNew := Boolean(hi(count));
-    count := lo(count);
-    result := ReadData(addr, $201, s);
+    result := ReadData(addr, $201, s, 16);
+    if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
+      count := count - 2; // -$0D$0A
     move(s[1], CardNum[0], count);
   end
 end;
@@ -179,10 +172,6 @@ function TController.GetExitCount(Addr: byte; var Value: longword): TModbusError
 var
   n: word;
 begin
-//  ReadData(addr, $46, n);
-//  value := n;
-//  result := ReadData(addr, $47, n);
-//  value := value shl 16 + n;
   ReadData(addr, $47, n);
   value := n;
   result := ReadData(addr, $46, n);
@@ -199,15 +188,14 @@ begin
   result := ReadData(addr, $3000, value);
 end;
 
-function TController.ReadData(Addr: byte; RegAddr: word;
-  var Ans: ansistring): TModbusError;
+function TController.ReadData(Addr: byte; RegAddr: word; var Ans: ansistring; Count: byte = 1): TModbusError;
 var
   param: TAddrQtyRec;
   output: TResultRec;
 begin
   ans := '';
   param.Addr := RegAddr;
-  param.Qty := 16;
+  param.Qty := Count;
 
   Result := FModbus.ReadHoldingRegisters(Addr, param, output);
 
@@ -219,8 +207,6 @@ begin
       move(output.data[1], ans[1], output.Qty);
     end;
   end
-  else
-    ans := '';
 end;
 
 function TController.ReadData(Addr: byte; RegAddr: word; var Ans: word): TModbusError;
@@ -238,11 +224,8 @@ begin
   if Result = merNone then
   begin
     if output.Qty <> 0 then
-  //    ans := output.data[2] shl 8 + output.data[1];
       ans := output.data[1] shl 8 + output.data[2];
   end
-  else
-    ans := 0;
 end;
 
 function TController.SetControllerSpeed(Addr: byte; Value: longword): TModbusError;
@@ -251,103 +234,67 @@ var
 begin
   speed := trunc(value / 100);
   speed2 := not speed;
-  result := WriteState(addr, $4310 , speed, speed2);
+  result := WriteState(addr, $4310 , [speed, speed2]);
 end;
 
 function TController.SetEngineTime(Addr, State: byte): TModbusError;
 begin
-  result := WriteState(addr, $48, state);
+  result := WriteState(addr, $48, [state]);
 end;
 
 function TController.SetEnter(Addr: byte; State: word): TModbusError;
 begin
-  result := WriteState(addr, $40, state);
+  result := WriteState(addr, $40, [state]);
 end;
 
-function TController.SetEnterGreen_t(Addr: byte; Value: word): TModbusError;
+function TController.SetEnterGreen(Addr: byte; OnTime, OffTime,
+  LengthTime: word): TModbusError;
 begin
-  result := WriteState(addr, $1000, value);
+  result := WriteState(addr, $1000, [OnTime, OffTime, LengthTime]);
 end;
 
-function TController.SetEnterGreen_t2(Addr: byte; Value: word): TModbusError;
+function TController.SetEnterRed(Addr: byte; OnTime, OffTime,
+  LengthTime: word): TModbusError;
 begin
-  result := WriteState(addr, $1001, value);
-end;
-
-function TController.SetEnterGreen_time(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $1002, value);
-end;
-
-function TController.SetEnterRed_t(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $1003, value);
-end;
-
-function TController.SetEnterRed_t2(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $1004, value);
-end;
-
-function TController.SetEnterRed_time(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $1005, value);
+  result := WriteState(addr, $1003, [OnTime, OffTime, LengthTime]);
 end;
 
 function TController.SetExit(Addr:byte; State: word): TModbusError;
 begin
-  result := WriteState(addr, $41, state);
+  result := WriteState(addr, $41, [state]);
 end;
 
-function TController.SetExitGreen_t(Addr: byte; Value: word): TModbusError;
+function TController.SetExitGreen(Addr: byte; OnTime, OffTime,
+  LengthTime: word): TModbusError;
 begin
-  result := WriteState(addr, $1006, value);
+  result := WriteState(addr, $1008, [OnTime, OffTime, LengthTime]);
 end;
 
-function TController.SetExitGreen_t2(Addr: byte; Value: word): TModbusError;
+function TController.SetExitRed(Addr: byte; OnTime, OffTime,
+  LengthTime: word): TModbusError;
 begin
-  result := WriteState(addr, $1007, value);
-end;
-
-function TController.SetExitGreen_time(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $1008, value);
-end;
-
-function TController.SetExitRed_t(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $1009, value);
-end;
-
-function TController.SetExitRed_t2(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $100A, value);
-end;
-
-function TController.SetExitRed_time(Addr: byte; Value: word): TModbusError;
-begin
-  result := WriteState(addr, $100B, value);
+  result := WriteState(addr, $1009, [OnTime, OffTime, LengthTime]);
 end;
 
 function TController.SetAccumulPas(Addr, State: byte): TModbusError;
 begin
-  result := WriteState(addr, $3010, state);
+  result := WriteState(addr, $3010, [state]);
 end;
 
 function TController.SetAfterPermissionPassTime(Addr,
   State: byte): TModbusError;
 begin
-  result := WriteState(addr, $3011, state);
+  result := WriteState(addr, $3011, [state]);
 end;
 
 function TController.SetAfterStartPassTime(Addr, State: byte): TModbusError;
 begin
-  result := WriteState(addr, $3012, state);
+  result := WriteState(addr, $3012, [state]);
 end;
 
 function TController.SetPassState(Addr, State: byte): TModbusError;
 begin
-  result := WriteState(addr, $3000, state);
+  result := WriteState(addr, $3000, [state]);
 end;
 
 function TController.SetScannerSpeed(Addr: byte; Value: word): TModbusError;
@@ -355,30 +302,24 @@ var
   speed: word;
 begin
   speed := trunc(value / 100);
-  result := WriteState(addr, $4350, speed);
+  result := WriteState(addr, $4350, [speed]);
 end;
 
-function TController.WriteState(Addr: byte; RegAddr: word; Value: word; Value2: word = 0): TModbusError;
+function TController.WriteState(Addr: byte; RegAddr: word;
+  Value: array of word): TModbusError;
 var
   arec: TRegDataRec;
+  i, j: byte;
 begin
   arec.Addr := RegAddr;
-//  arec.Qty := 1;
-//  arec.data[1] := 0;
-//  arec.data[2] := value
-  if Value2 = 0 then
+
+  arec.Qty := length(value);
+  j := 1;
+  for i := 0 to length(value) - 1 do
   begin
-    arec.Qty := 1;
-    arec.data[1] := hi(value);
-    arec.data[2] := lo(value);
-  end
-  else
-  begin
-    arec.Qty := 2;
-    arec.data[1] := hi(value);
-    arec.data[2] := lo(value);
-    arec.data[3] := hi(value2);
-    arec.data[4] := lo(value2);
+    arec.data[j] := hi(value[i]);
+    arec.data[j + 1] := lo(value[i]);
+    j := j + 2;
   end;
 
   Result := FModbus.WriteMultipleRegisters(Addr, arec);

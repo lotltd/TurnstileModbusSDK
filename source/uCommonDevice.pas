@@ -117,7 +117,8 @@ begin
   Result := false;
   try
     FModbus := TModbus.Create(Port, Speed);
-    Result := true;
+    if FModbus.Connected then
+      Result := true;
   except
     FModbus := nil;
   end;

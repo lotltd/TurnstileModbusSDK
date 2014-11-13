@@ -453,10 +453,10 @@ begin
 
   if Result <> merNone then exit;
   if crc16string(dataout) <> #0#0 then
-   begin
+  begin
     Result := merCRCError;
     exit;
-   end;
+  end;
 end;
 
 function TModbus.SendTCP(TxSleep: cardinal; datain: AnsiString; var dataout: AnsiString): TModbusError;

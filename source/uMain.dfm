@@ -4,7 +4,7 @@ object Form1: TForm1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Modbus demo'
-  ClientHeight = 718
+  ClientHeight = 746
   ClientWidth = 1133
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -357,7 +357,7 @@ object Form1: TForm1
         Top = 20
         Width = 102
         Height = 25
-        Caption = #1054#1076#1085#1086#1082#1088#1072#1090#1085#1099#1081
+        Caption = #1054#1076#1080#1085#1086#1095#1085#1099#1081
         TabOrder = 1
         OnClick = btnEnterPassClick
       end
@@ -585,7 +585,7 @@ object Form1: TForm1
         Top = 20
         Width = 102
         Height = 25
-        Caption = #1054#1076#1085#1086#1082#1088#1072#1090#1085#1099#1081
+        Caption = #1054#1076#1080#1085#1086#1095#1085#1099#1081
         TabOrder = 1
         OnClick = btnExitPassClick
       end
@@ -609,7 +609,7 @@ object Form1: TForm1
     Left = 8
     Top = 471
     Width = 1113
-    Height = 234
+    Height = 258
     Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1086' '#1089#1086#1089#1090#1086#1103#1085#1080#1080
     TabOrder = 2
     object Label5: TLabel
@@ -718,25 +718,26 @@ object Form1: TForm1
       Left = 167
       Top = 74
       Width = 153
-      Height = 153
-      Caption = #1042#1093#1086#1076
+      Height = 175
+      Caption = #1042#1099#1093#1086#1076
       Enabled = False
       TabOrder = 5
       object rgExitState: TRadioGroup
         Left = 8
         Top = 15
         Width = 137
-        Height = 50
+        Height = 74
         Enabled = False
         ItemIndex = 0
         Items.Strings = (
           #1055#1088#1086#1093#1086#1076' '#1079#1072#1082#1088#1099#1090
+          #1054#1076#1080#1085#1086#1095#1085#1099#1081' '#1087#1088#1086#1093#1086#1076
           #1057#1074#1086#1073#1086#1076#1085#1099#1081' '#1087#1088#1086#1093#1086#1076)
         TabOrder = 0
       end
-      object rgEnterPassState: TRadioGroup
+      object rgExitPassState: TRadioGroup
         Left = 8
-        Top = 71
+        Top = 95
         Width = 137
         Height = 73
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1088#1086#1093#1086#1076#1072
@@ -752,25 +753,26 @@ object Form1: TForm1
       Left = 8
       Top = 74
       Width = 153
-      Height = 153
-      Caption = #1042#1099#1093#1086#1076
+      Height = 175
+      Caption = #1042#1093#1086#1076
       Enabled = False
       TabOrder = 6
       object rgEnterState: TRadioGroup
         Left = 8
         Top = 15
         Width = 137
-        Height = 50
+        Height = 74
         Enabled = False
         ItemIndex = 0
         Items.Strings = (
           #1055#1088#1086#1093#1086#1076' '#1079#1072#1082#1088#1099#1090
+          #1054#1076#1080#1085#1086#1095#1085#1099#1081' '#1087#1088#1086#1093#1086#1076
           #1057#1074#1086#1073#1086#1076#1085#1099#1081' '#1087#1088#1086#1093#1086#1076)
         TabOrder = 0
       end
-      object rgExitPassState: TRadioGroup
+      object rgEnterPassState: TRadioGroup
         Left = 8
-        Top = 71
+        Top = 95
         Width = 134
         Height = 73
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1088#1086#1093#1086#1076#1072
