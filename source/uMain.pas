@@ -9,7 +9,7 @@ uses
   uController, uModbus;
 
 type
-  TForm1 = class(TForm)
+  TfmMain = class(TForm)
     edEnterCount: TEdit;
     edExitCount: TEdit;
     GroupBox2: TGroupBox;
@@ -112,6 +112,13 @@ type
     Label25: TLabel;
     cbScannerSpeed: TComboBox;
     btnSepScannerSpeed: TBitBtn;
+    GroupBox16: TGroupBox;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    edCompany: TEdit;
+    edProduct: TEdit;
+    edVer: TEdit;
     procedure btnStartClick(Sender: TObject);
     procedure rgEnterClick(Sender: TObject);
     procedure rgExitClick(Sender: TObject);
@@ -128,6 +135,10 @@ type
     procedure btnEnterPassClick(Sender: TObject);
     procedure btnExitPassClick(Sender: TObject);
     procedure btnSepScannerSpeedClick(Sender: TObject);
+    procedure edCompanyMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure edProductMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     FController: TController;
   public
@@ -135,74 +146,74 @@ type
   end;
 
 var
-  Form1: TForm1;
+  fmMain: TfmMain;
 
 implementation
 
 {$R *.dfm}
 
-procedure TForm1.btnAfterPermissionPassTimeClick(Sender: TObject);
+procedure TfmMain.btnAfterPermissionPassTimeClick(Sender: TObject);
 begin
   if FController = nil then exit;
   if FController.SetAfterPermissionPassTime(StrToInt(edAddr.Text), StrToInt(edAfterPermissionPassTime.Text)) = merNone then
     MessageDlg('Установлено', mtInformation, [mbOk], 0);
 end;
 
-procedure TForm1.btnAfterStartPassTimeClick(Sender: TObject);
+procedure TfmMain.btnAfterStartPassTimeClick(Sender: TObject);
 begin
   if FController = nil then exit;
   if FController.SetAfterStartPassTime(StrToInt(edAddr.Text), StrToInt(edAfterStartPassTime.Text)) = merNone then
     MessageDlg('Установлено', mtInformation, [mbOk], 0);
 end;
 
-procedure TForm1.btnEngineTimeClick(Sender: TObject);
+procedure TfmMain.btnEngineTimeClick(Sender: TObject);
 begin
   if FController = nil then exit;
   if FController.SetEngineTime(StrToInt(edAddr.Text), StrToInt(edEngineTime.Text)) = merNone then
     MessageDlg('Установлено', mtInformation, [mbOk], 0);
 end;
 
-procedure TForm1.btnEnterGreenClick(Sender: TObject);
+procedure TfmMain.btnEnterGreenClick(Sender: TObject);
 begin
   if FController = nil then exit;
   FController.SetEnterGreen(StrToInt(edAddr.Text), StrToInt(edEnterGreen_t.Text),
     StrToInt(edEnterGreen_t2.Text), StrToInt(edEnterGreen_time.Text))
 end;
 
-procedure TForm1.btnEnterPassClick(Sender: TObject);
+procedure TfmMain.btnEnterPassClick(Sender: TObject);
 begin
   if FController = nil then exit;
   FController.SetEnter(StrToInt(edAddr.Text), 1);
 end;
 
-procedure TForm1.btnEnterRedClick(Sender: TObject);
+procedure TfmMain.btnEnterRedClick(Sender: TObject);
 begin
   if FController = nil then exit;
   FController.SetEnterRed(StrToInt(edAddr.Text), StrToInt(edEnterRed_t.Text),
     StrToInt(edEnterRed_t2.Text), StrToInt(edEnterRed_time.Text))
 end;
 
-procedure TForm1.btnExitGreenClick(Sender: TObject);
+procedure TfmMain.btnExitGreenClick(Sender: TObject);
 begin
   if FController = nil then exit;
   FController.SetExitGreen(StrToInt(edAddr.Text), StrToInt(edExitGreen_t.Text),
     StrToInt(edExitGreen_t2.Text), StrToInt(edExitGreen_time.Text))
 end;
 
-procedure TForm1.btnExitPassClick(Sender: TObject);
+procedure TfmMain.btnExitPassClick(Sender: TObject);
 begin
   if FController = nil then exit;
   FController.SetExit(StrToInt(edAddr.Text), 1);
 end;
 
-procedure TForm1.btnExitRedClick(Sender: TObject);
+procedure TfmMain.btnExitRedClick(Sender: TObject);
 begin
   if FController = nil then exit;
   FController.SetExitRed(StrToInt(edAddr.Text), StrToInt(edExitRed_t.Text),
     StrToInt(edExitRed_t2.Text), StrToInt(edExitRed_time.Text))
 end;
 
-procedure TForm1.btnSepScannerSpeedClick(Sender: TObject);
+procedure TfmMain.btnSepScannerSpeedClick(Sender: TObject);
 var
   Error: TModbusError;
 begin
@@ -214,7 +225,7 @@ begin
     MessageDlg(StrModbusError[error], mtError, [mbOk], 0);
 end;
 
-procedure TForm1.btnSetSpeedClick(Sender: TObject);
+procedure TfmMain.btnSetSpeedClick(Sender: TObject);
 var
   Error: TModbusError;
 begin
@@ -226,7 +237,7 @@ begin
     MessageDlg(StrModbusError[error], mtError, [mbOk], 0);
 end;
 
-procedure TForm1.btnStartClick(Sender: TObject);
+procedure TfmMain.btnStartClick(Sender: TObject);
 var
   Error: TModbusError;
 begin
@@ -248,13 +259,32 @@ begin
     end
     else
     begin
+      edCompany.Text := FController.DeviceInfo.Company;
+      edProduct.Text := FController.DeviceInfo.Product;
+      edVer.Text := FController.DeviceInfo.Version;
       btnStart.Caption := 'Отключиться';
       Timer1.Enabled := true;
     end;
   end;
 end;
 
-procedure TForm1.rgEnterClick(Sender: TObject);
+procedure TfmMain.edCompanyMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if FController = nil then exit;
+  if Button = mbRight then
+    FController.SetDemo(StrToInt(edAddr.Text), 0);
+end;
+
+procedure TfmMain.edProductMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if FController = nil then exit;
+  if Button = mbRight then
+    FController.SetDemo(StrToInt(edAddr.Text), 1);
+end;
+
+procedure TfmMain.rgEnterClick(Sender: TObject);
 var
   n: word;
 begin
@@ -276,7 +306,7 @@ begin
     rgEnterState.ItemIndex := 1;
 end;
 
-procedure TForm1.rgExitClick(Sender: TObject);
+procedure TfmMain.rgExitClick(Sender: TObject);
 var
   n: word;
 begin
@@ -298,13 +328,13 @@ begin
     rgExitState.ItemIndex := 1;
 end;
 
-procedure TForm1.rgPassStateClick(Sender: TObject);
+procedure TfmMain.rgPassStateClick(Sender: TObject);
 begin
   if FController = nil then exit;
   FController.SetPassState(StrToInt(edAddr.Text), rgPassState.ItemIndex);
 end;
 
-procedure TForm1.Timer1Timer(Sender: TObject);
+procedure TfmMain.Timer1Timer(Sender: TObject);
 var
   n: word;
   ln: longword;
@@ -312,15 +342,20 @@ var
   Card: Tar;
   i: byte;
   count: word;
+  error: TModbusError;
 begin
   if FController = nil then exit;
-  FController.GetEnter(StrToInt(edAddr.Text), n);
+  error := FController.GetEnter(StrToInt(edAddr.Text), n);
   if n = 0 then
     rgEnterState.ItemIndex := 0
   else if n = $FFFF then
     rgEnterState.ItemIndex := 2
   else
     rgEnterState.ItemIndex := 1;
+
+  if error <> merNone then
+   btnStart.OnClick(Sender);
+
   Application.ProcessMessages;
 
   if FController = nil then exit;
@@ -397,6 +432,16 @@ begin
     end;
     edCard2.Text := trim(edCard2.Text);
   end;
+
+  if FController = nil then exit;
+  FController.GetDemo(StrToInt(edAddr.Text), n);
+  if n = 0 then
+    fmMain.Caption := 'Modbus demo'
+  else
+    fmMain.Caption := 'Modbus demo *';
+
+  Application.ProcessMessages;
+
 end;
 
 end.

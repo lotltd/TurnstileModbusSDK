@@ -2,7 +2,7 @@ program Modbus;
 
 uses
   Vcl.Forms,
-  uMain in 'uMain.pas' {Form1},
+  uMain in 'uMain.pas' {fmMain},
   uController in 'uController.pas';
 
 {$R *.res}
@@ -10,6 +10,6 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfmMain, fmMain);
   Application.Run;
 end.

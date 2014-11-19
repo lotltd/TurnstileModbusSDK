@@ -1,4 +1,4 @@
-object Form1: TForm1
+object fmMain: TfmMain
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
@@ -699,7 +699,7 @@ object Form1: TForm1
     object edCard: TEdit
       Left = 427
       Top = 79
-      Width = 600
+      Width = 674
       Height = 21
       Enabled = False
       ReadOnly = True
@@ -708,7 +708,7 @@ object Form1: TForm1
     object edCard2: TEdit
       Left = 428
       Top = 133
-      Width = 600
+      Width = 674
       Height = 21
       Enabled = False
       ReadOnly = True
@@ -787,7 +787,7 @@ object Form1: TForm1
     object edCardASCII: TEdit
       Left = 427
       Top = 106
-      Width = 600
+      Width = 674
       Height = 21
       Enabled = False
       ReadOnly = True
@@ -796,7 +796,7 @@ object Form1: TForm1
     object edCard2ASCII: TEdit
       Left = 427
       Top = 160
-      Width = 600
+      Width = 674
       Height = 21
       Enabled = False
       ReadOnly = True
@@ -963,11 +963,66 @@ object Form1: TForm1
         OnClick = btnSepScannerSpeedClick
       end
     end
+    object GroupBox16: TGroupBox
+      Left = 623
+      Top = 16
+      Width = 217
+      Height = 129
+      Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103
+      TabOrder = 3
+      object Label26: TLabel
+        Left = 16
+        Top = 24
+        Width = 53
+        Height = 13
+        Caption = #1050#1086#1084#1087#1072#1085#1080#1103':'
+      end
+      object Label27: TLabel
+        Left = 16
+        Top = 48
+        Width = 52
+        Height = 13
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      end
+      object Label28: TLabel
+        Left = 16
+        Top = 72
+        Width = 39
+        Height = 13
+        Caption = #1042#1077#1088#1089#1080#1103':'
+      end
+      object edCompany: TEdit
+        Left = 80
+        Top = 21
+        Width = 121
+        Height = 21
+        ReadOnly = True
+        TabOrder = 0
+        OnMouseDown = edCompanyMouseDown
+      end
+      object edProduct: TEdit
+        Left = 80
+        Top = 48
+        Width = 121
+        Height = 21
+        ReadOnly = True
+        TabOrder = 1
+        OnMouseDown = edProductMouseDown
+      end
+      object edVer: TEdit
+        Left = 80
+        Top = 72
+        Width = 121
+        Height = 21
+        ReadOnly = True
+        TabOrder = 2
+      end
+    end
   end
   object Timer1: TTimer
     Enabled = False
     OnTimer = Timer1Timer
-    Left = 816
-    Top = 64
+    Left = 1032
+    Top = 32
   end
 end

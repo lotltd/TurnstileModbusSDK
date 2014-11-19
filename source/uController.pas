@@ -96,6 +96,9 @@ type
     //Общая длительность цикла индикации, в 100 мс интервалах (time)
     //Значение 0xFFFF – Соответствуют бесконечному времени.
     function SetExitRed(Addr: byte; OnTime, OffTime, LengthTime: word): TModbusError;
+
+    function GetDemo(Addr: byte; var State: word): TModbusError;
+    function SetDemo(Addr: byte; State: byte): TModbusError;
   end;
 
 implementation
@@ -103,6 +106,11 @@ implementation
 function TController.GetErrorState(Addr: byte; var Value: word): TModbusError;
 begin
   result := ReadData(addr, $48, value);
+end;
+
+function TController.GetDemo(Addr:byte; var State: word): TModbusError;
+begin
+  result := ReadData(addr, $666, state);
 end;
 
 function TController.GetEnter(Addr: byte; var Value: word): TModbusError;
@@ -122,7 +130,7 @@ begin
 
   if (count <> 0) and IsNew then
   begin
-    result := ReadData(addr, $101, s, 16);
+    result := ReadData(addr, $101, s, round(count / 2));
     if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
       count := count - 2; // -$0D$0A
     move(s[1], CardNum[0], count);
@@ -161,7 +169,7 @@ begin
 
   if (count <> 0) and IsNew then
   begin
-    result := ReadData(addr, $201, s, 16);
+    result := ReadData(addr, $201, s, round(count / 2));
     if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
       count := count - 2; // -$0D$0A
     move(s[1], CardNum[0], count);
@@ -235,6 +243,11 @@ begin
   speed := trunc(value / 100);
   speed2 := not speed;
   result := WriteState(addr, $4310 , [speed, speed2]);
+end;
+
+function TController.SetDemo(Addr, State: byte): TModbusError;
+begin
+  result := WriteState(addr, $666, [state]);
 end;
 
 function TController.SetEngineTime(Addr, State: byte): TModbusError;

@@ -48,7 +48,7 @@ procedure TfmMain.btnCodeAddClick(Sender: TObject);
 var
   n: string;
 begin
-  if InputQuery('Добавление турникета', 'Номер турникета', n) then
+  if InputQuery('Добавление кода', 'Код', n) then
     lbCode.Items.Add(n);
 end;
 
