@@ -119,6 +119,7 @@ type
     edCompany: TEdit;
     edProduct: TEdit;
     edVer: TEdit;
+    cbDemo: TCheckBox;
     procedure btnStartClick(Sender: TObject);
     procedure rgEnterClick(Sender: TObject);
     procedure rgExitClick(Sender: TObject);
@@ -135,10 +136,9 @@ type
     procedure btnEnterPassClick(Sender: TObject);
     procedure btnExitPassClick(Sender: TObject);
     procedure btnSepScannerSpeedClick(Sender: TObject);
-    procedure edCompanyMouseDown(Sender: TObject; Button: TMouseButton;
+    procedure Panel1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure edProductMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure cbDemoClick(Sender: TObject);
   private
     FController: TController;
   public
@@ -217,8 +217,11 @@ procedure TfmMain.btnSepScannerSpeedClick(Sender: TObject);
 var
   Error: TModbusError;
 begin
+  error := merNone;
   if FController = nil then exit;
+  FController.SetTimeOut(60);
   error := FController.SetScannerSpeed(StrToInt(edAddr.Text), StrToInt(cbScannerSpeed.Text));
+  FController.SetTimeOut(30);
   if error = merNone then
     MessageDlg('Требуется перезагрузка контроллера', mtWarning, [mbOk], 0)
   else
@@ -268,19 +271,23 @@ begin
   end;
 end;
 
-procedure TfmMain.edCompanyMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TfmMain.cbDemoClick(Sender: TObject);
 begin
-  if FController = nil then exit;
-  if Button = mbRight then
-    FController.SetDemo(StrToInt(edAddr.Text), 0);
+  if FController <> nil then
+  begin
+    if cbDemo.Checked then
+      FController.SetDemo(StrToInt(edAddr.Text), 1)
+    else
+      FController.SetDemo(StrToInt(edAddr.Text), 0);
+  end;
 end;
 
-procedure TfmMain.edProductMouseDown(Sender: TObject; Button: TMouseButton;
+procedure TfmMain.Panel1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if FController = nil then exit;
   if Button = mbRight then
+    FController.SetDemo(StrToInt(edAddr.Text), 0);
+  if Button = mbLeft then
     FController.SetDemo(StrToInt(edAddr.Text), 1);
 end;
 
@@ -435,13 +442,12 @@ begin
 
   if FController = nil then exit;
   FController.GetDemo(StrToInt(edAddr.Text), n);
-  if n = 0 then
-    fmMain.Caption := 'Modbus demo'
+  if n = 1 then
+    fmMain.Caption := 'Modbus demo on'
   else
-    fmMain.Caption := 'Modbus demo *';
+    fmMain.Caption := 'Modbus demo off';
 
   Application.ProcessMessages;
-
 end;
 
 end.

@@ -659,7 +659,6 @@ object fmMain: TfmMain
       Top = 21
       Width = 121
       Height = 21
-      Enabled = False
       ReadOnly = True
       TabOrder = 0
       Text = '0'
@@ -669,7 +668,6 @@ object fmMain: TfmMain
       Top = 48
       Width = 121
       Height = 21
-      Enabled = False
       ReadOnly = True
       TabOrder = 1
       Text = '0'
@@ -692,7 +690,6 @@ object fmMain: TfmMain
         Top = 9
         Width = 19
         Height = 17
-        Enabled = False
         TabOrder = 0
       end
     end
@@ -701,7 +698,6 @@ object fmMain: TfmMain
       Top = 79
       Width = 674
       Height = 21
-      Enabled = False
       ReadOnly = True
       TabOrder = 3
     end
@@ -710,7 +706,6 @@ object fmMain: TfmMain
       Top = 133
       Width = 674
       Height = 21
-      Enabled = False
       ReadOnly = True
       TabOrder = 4
     end
@@ -727,7 +722,6 @@ object fmMain: TfmMain
         Top = 15
         Width = 137
         Height = 74
-        Enabled = False
         ItemIndex = 0
         Items.Strings = (
           #1055#1088#1086#1093#1086#1076' '#1079#1072#1082#1088#1099#1090
@@ -741,7 +735,6 @@ object fmMain: TfmMain
         Width = 137
         Height = 73
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1088#1086#1093#1086#1076#1072
-        Enabled = False
         ItemIndex = 0
         Items.Strings = (
           #1055#1088#1086#1093#1086#1076' '#1089#1074#1086#1073#1086#1076#1077#1085
@@ -762,7 +755,6 @@ object fmMain: TfmMain
         Top = 15
         Width = 137
         Height = 74
-        Enabled = False
         ItemIndex = 0
         Items.Strings = (
           #1055#1088#1086#1093#1086#1076' '#1079#1072#1082#1088#1099#1090
@@ -776,7 +768,6 @@ object fmMain: TfmMain
         Width = 134
         Height = 73
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1087#1088#1086#1093#1086#1076#1072
-        Enabled = False
         ItemIndex = 0
         Items.Strings = (
           #1055#1088#1086#1093#1086#1076' '#1089#1074#1086#1073#1086#1076#1077#1085
@@ -789,7 +780,6 @@ object fmMain: TfmMain
       Top = 106
       Width = 674
       Height = 21
-      Enabled = False
       ReadOnly = True
       TabOrder = 7
     end
@@ -798,7 +788,6 @@ object fmMain: TfmMain
       Top = 160
       Width = 674
       Height = 21
-      Enabled = False
       ReadOnly = True
       TabOrder = 8
     end
@@ -954,7 +943,7 @@ object fmMain: TfmMain
           '9600')
       end
       object btnSepScannerSpeed: TBitBtn
-        Left = 172
+        Left = 178
         Top = 19
         Width = 125
         Height = 25
@@ -998,7 +987,6 @@ object fmMain: TfmMain
         Height = 21
         ReadOnly = True
         TabOrder = 0
-        OnMouseDown = edCompanyMouseDown
       end
       object edProduct: TEdit
         Left = 80
@@ -1007,7 +995,6 @@ object fmMain: TfmMain
         Height = 21
         ReadOnly = True
         TabOrder = 1
-        OnMouseDown = edProductMouseDown
       end
       object edVer: TEdit
         Left = 80
@@ -1018,11 +1005,20 @@ object fmMain: TfmMain
         TabOrder = 2
       end
     end
+    object cbDemo: TCheckBox
+      Left = 864
+      Top = 40
+      Width = 97
+      Height = 17
+      Caption = 'Demo '#1088#1077#1078#1080#1084
+      TabOrder = 4
+      OnClick = cbDemoClick
+    end
   end
   object Timer1: TTimer
     Enabled = False
     OnTimer = Timer1Timer
-    Left = 1032
-    Top = 32
+    Left = 792
+    Top = 384
   end
 end

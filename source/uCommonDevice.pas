@@ -26,6 +26,8 @@ type
 
     function Connect: boolean;
 
+    procedure SetTimeOut(Value: byte);
+
     property DeviceInfo: TModbusIdentification read FIdent;
   end;
 
@@ -61,6 +63,11 @@ begin
 
     if dataout[6] <> #$FF then break; // больше нечего тащить
   end;
+end;
+
+procedure TCommonModbusDevice.SetTimeOut(Value: byte);
+begin
+  FModbus.TimeOut := Value;
 end;
 
 function TCommonModbusDevice.Close: boolean;

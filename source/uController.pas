@@ -3,7 +3,7 @@
 interface
 
 uses
-  SysUtils, uCommonDevice, uModbus;
+  SysUtils, System.Math, uCommonDevice, uModbus;
 
 type
   TAr = array[0..59] of byte;
@@ -122,19 +122,26 @@ function TController.GetEnterCard(Addr: byte; var IsNew: boolean;
   var CardNum: TAr; var Count: word): TModbusError;
 var
   s: ansistring;
+  OldRM: TRoundingMode;
 begin
-  FillChar(CardNum, SizeOf(CardNum), #0);
-  result := ReadData(addr, $100, count);
-  IsNew := Boolean(hi(count));
-  count := lo(count);
+  OldRM := GetRoundMode;
+  try
+    FillChar(CardNum, SizeOf(CardNum), #0);
+    result := ReadData(addr, $100, count);
+    IsNew := Boolean(hi(count));
+    count := lo(count);
 
-  if (count <> 0) and IsNew then
-  begin
-    result := ReadData(addr, $101, s, round(count / 2));
-    if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
-      count := count - 2; // -$0D$0A
-    move(s[1], CardNum[0], count);
-  end
+    if (count <> 0) and IsNew then
+    begin
+      SetRoundMode(rmUp);
+      result := ReadData(addr, $101, s, round(count / 2));
+      if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
+        count := count - 2; // -$0D$0A
+      move(s[1], CardNum[0], count);
+    end
+  finally
+    SetRoundMode(OldRM);
+  end;
 end;
 
 function TController.GetEnterCount(Addr: byte; var Value: longword): TModbusError;
@@ -161,19 +168,26 @@ function TController.GetExitCard(Addr: byte; var IsNew: boolean;
   var CardNum: TAr; var Count: word): TModbusError;
 var
   s: ansistring;
+  OldRM: TRoundingMode;
 begin
-  FillChar(CardNum, SizeOf(CardNum), #0);
-  result := ReadData(addr, $200, count);
-  IsNew := Boolean(hi(count));
-  count := lo(count);
+  OldRM := GetRoundMode;
+  try
+    FillChar(CardNum, SizeOf(CardNum), #0);
+    result := ReadData(addr, $200, count);
+    IsNew := Boolean(hi(count));
+    count := lo(count);
 
-  if (count <> 0) and IsNew then
-  begin
-    result := ReadData(addr, $201, s, round(count / 2));
-    if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
-      count := count - 2; // -$0D$0A
-    move(s[1], CardNum[0], count);
-  end
+    if (count <> 0) and IsNew then
+    begin
+      SetRoundMode(rmUp);
+      result := ReadData(addr, $201, s, round(count / 2));
+      if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
+        count := count - 2; // -$0D$0A
+      move(s[1], CardNum[0], count);
+    end
+  finally
+    SetRoundMode(OldRM);
+  end;
 end;
 
 function TController.GetExitCount(Addr: byte; var Value: longword): TModbusError;

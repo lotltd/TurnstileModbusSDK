@@ -4,8 +4,8 @@ object fmMain: TfmMain
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Demo'
-  ClientHeight = 411
-  ClientWidth = 415
+  ClientHeight = 658
+  ClientWidth = 560
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,40 +28,40 @@ object fmMain: TfmMain
   object GroupBox1: TGroupBox
     Left = 8
     Top = 32
-    Width = 193
-    Height = 313
+    Width = 150
+    Height = 561
     Caption = #1058#1091#1088#1085#1080#1082#1077#1090#1099
     TabOrder = 0
     object lbTurn: TListBox
       Left = 13
       Top = 16
-      Width = 169
-      Height = 281
+      Width = 124
+      Height = 529
       ItemHeight = 13
       PopupMenu = PopupMenu1
       TabOrder = 0
     end
   end
   object GroupBox2: TGroupBox
-    Left = 207
+    Left = 164
     Top = 32
-    Width = 193
-    Height = 313
+    Width = 381
+    Height = 561
     Caption = #1050#1086#1076#1099
     TabOrder = 1
     object lbCode: TListBox
       Left = 13
       Top = 16
-      Width = 169
-      Height = 281
+      Width = 356
+      Height = 529
       ItemHeight = 13
       PopupMenu = PopupMenu2
       TabOrder = 0
     end
   end
   object btnStart: TBitBtn
-    Left = 152
-    Top = 359
+    Left = 208
+    Top = 615
     Width = 105
     Height = 25
     Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100#1089#1103

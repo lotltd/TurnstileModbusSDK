@@ -107,7 +107,7 @@ end;
 procedure TfmMain.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   ini: TIniFile;
-  i: byte;
+  i: integer;
 begin
   ini := TIniFile.Create(ExtractFilePath(Application.Exename) + 'Settings.ini');
   try

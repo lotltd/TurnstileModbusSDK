@@ -87,6 +87,7 @@ type
     FModbusTCP: boolean;
     FPort: TComPort;
     FSocket: TTcpClient;
+    FTimeout : byte;
 
     function SendTCP(TxSleep: cardinal; datain: AnsiString; var dataout: AnsiString): TModbusError;
     function SendRTU(TxSleep: cardinal; datain: AnsiString; var dataout: AnsiString): TModbusError;
@@ -115,6 +116,8 @@ type
     function TCPConnect: boolean;
 
     function Connected: boolean;
+
+    property TimeOut: byte read FTimeOut write FTimeOut;
   end;
 
 implementation
@@ -152,6 +155,7 @@ begin
   FModbusTCP := false;
   FPort := TComPort.Create(Nil);
   FPort.Port := 'COM' + IntToStr(Port);
+  FTimeout := 30;
 
   case speed of
     115200: FPort.BaudRate := br115200;
@@ -180,6 +184,7 @@ begin
   inherited Create;
 
   FModbusTCP := true;
+  FTimeout := 30;
   FSocket := TTcpClient.Create(nil);
   FSocket.RemoteHost := Host;
   FSocket.RemotePort := IntToStr(Port);
@@ -590,7 +595,7 @@ begin
     AnsiChar(input.Qty * 2) +
     ArrByteToString(input.data, input.Qty * 2);
 
-  Result := Send(40 + input.Qty, Address, 16, vin, output);
+  Result := Send(10 + FTimeout + input.Qty, Address, 16, vin, output);
 
   if Result <> merNone then exit;
   if ord(output[5]) * $FF + ord(output[6]) <> input.Qty then
