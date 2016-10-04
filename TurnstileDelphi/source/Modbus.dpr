@@ -3,7 +3,10 @@ program Modbus;
 uses
   Vcl.Forms,
   uMain in 'uMain.pas' {fmMain},
-  uController in 'uController.pas';
+  uController in 'uController.pas',
+  uModbus in 'uModbus.pas',
+  uCommonDevice in 'uCommonDevice.pas',
+  uControllerThread in 'uControllerThread.pas';
 
 {$R *.res}
 

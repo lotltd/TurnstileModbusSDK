@@ -17,7 +17,7 @@ type
 
     function Open(Port, Speed, Adr: integer): TModbusError; overload;
     function Open(Port, Speed: integer): boolean; overload;
-    function Open(Host: string; Port: integer): boolean; overload;
+    function Open(Host: string; Port: integer; Adr: integer): TModbusError; overload;
     function Close: boolean;
 
     function ReadDeviceIdentification(Addr: byte; var Ident: TModbusIdentification): TModbusError;
@@ -74,7 +74,7 @@ function TCommonModbusDevice.Close: boolean;
 begin
   Result := false;
   try
-    FModbus.Destroy;
+    FModbus.Free;
     Result := true;
   except
   end;
@@ -101,12 +101,12 @@ end;
 
 destructor TCommonModbusDevice.Destroy;
 begin
-  inherited;
-
   try
     FModbus.Free;
   except
   end;
+
+  inherited;
 end;
 
 function TCommonModbusDevice.FindFirst: byte;
@@ -141,22 +141,23 @@ begin
   try
     result := ReadDeviceIdentification(Adr, FIdent);
     if result <> merNone then
-      FModbus.Destroy;
+      FreeAndNil(FModbus);//.Free;
   except
-    FModbus.Destroy;
+    FreeAndNil(FModbus);//.Free;
   end;
 end;
 
-function TCommonModbusDevice.Open(Host: string; Port: integer): boolean;
+function TCommonModbusDevice.Open(Host: string; Port: integer; Adr: integer): TModbusError;
 begin
-  Result := false;
   FIdent.Company := '';
   FIdent.Product := '';
   FIdent.Version := '';
 
   try
     FModbus := TModbus.Create(Host, Port);
-    Result := ReadDeviceIdentification(200, FIdent) in [merNone, merTimeout];
+    Result := ReadDeviceIdentification(Adr, FIdent);
+    if result <> merNone then
+      FModbus.Destroy;
   except
     FModbus := nil;
   end;

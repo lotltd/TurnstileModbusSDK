@@ -3,7 +3,7 @@
 interface
 
 uses
-  SysUtils, System.Math, uCommonDevice, uModbus;
+  SysUtils, System.Math, uCommonDevice, uModbus, syncobjs;
 
 type
   TAr = array[0..59] of byte;
@@ -48,6 +48,12 @@ type
     //0 - Проход в направлении выход свободен
     //Не 0 – позиция(наличие) объекта с направления выход
     function GetExitState(Addr: byte; var Value: word): TModbusError;
+    //Время необходимое для прохода после разрешения, секунд
+    function GetAfterPermissionPassTime(Addr: byte; var Value: word): TModbusError;
+    //Время необходимое после начала прохода, секунд
+    function GetAfterStartPassTime(Addr: byte; var Value: word): TModbusError;
+    //Таймаут работы двигателя, секунд
+    function GetEngineTime(Addr: byte; var Value: word): TModbusError;
 
     //Разрешение накопления проходов
     //0 – Накопление проходов запрещено
@@ -99,6 +105,13 @@ type
 
     function GetDemo(Addr: byte; var State: word): TModbusError;
     function SetDemo(Addr: byte; State: byte): TModbusError;
+
+    //ЖКИ индикатор-----------------------------------------------------
+    //Вывод 32 символа сообщения
+    function SetMessage(Addr: byte; AMessage: ansistring): TModbusError;
+    //Мигание символами сообщения
+    function SetBlink(Addr: byte; value: longword): TModbusError;
+    function SetAddress(Addr: byte; NewAddr: byte): TModbusError;
   end;
 
 implementation
@@ -108,9 +121,25 @@ begin
   result := ReadData(addr, $48, value);
 end;
 
+function TController.GetAfterPermissionPassTime(Addr: byte;
+  var Value: word): TModbusError;
+begin
+  result := ReadData(addr, $3011, value);
+end;
+
+function TController.GetAfterStartPassTime(Addr: byte; var Value: word): TModbusError;
+begin
+  result := ReadData(addr, $3012, value);
+end;
+
 function TController.GetDemo(Addr:byte; var State: word): TModbusError;
 begin
   result := ReadData(addr, $666, state);
+end;
+
+function TController.GetEngineTime(Addr: byte; var Value: word): TModbusError;
+begin
+  result := ReadData(addr, $48, value);
 end;
 
 function TController.GetEnter(Addr: byte; var Value: word): TModbusError;
@@ -135,9 +164,12 @@ begin
     begin
       SetRoundMode(rmUp);
       result := ReadData(addr, $101, s, round(count / 2));
-      if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
-        count := count - 2; // -$0D$0A
-      move(s[1], CardNum[0], count);
+      if result = merNone then
+      begin
+        if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
+          count := count - 2; // -$0D$0A
+        move(s[1], CardNum[0], count);
+      end;
     end
   finally
     SetRoundMode(OldRM);
@@ -150,7 +182,7 @@ var
 begin
   ReadData(addr, $45, n);
   value := n;
-  result := ReadData(1, $44, n);
+  result := ReadData(addr, $44, n);
   value := value shl 16 + n;
 end;
 
@@ -181,9 +213,12 @@ begin
     begin
       SetRoundMode(rmUp);
       result := ReadData(addr, $201, s, round(count / 2));
-      if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
-        count := count - 2; // -$0D$0A
-      move(s[1], CardNum[0], count);
+      if result = merNone then
+      begin
+        if (count = 15)  and (Byte(s[14]) = $0D) and (Byte(s[15]) = $0A) then
+          count := count - 2; // -$0D$0A
+        move(s[1], CardNum[0], count);
+      end;
     end
   finally
     SetRoundMode(OldRM);
@@ -228,7 +263,7 @@ begin
       SetLength(ans, output.Qty);
       move(output.data[1], ans[1], output.Qty);
     end;
-  end
+  end;
 end;
 
 function TController.ReadData(Addr: byte; RegAddr: word; var Ans: word): TModbusError;
@@ -247,7 +282,7 @@ begin
   begin
     if output.Qty <> 0 then
       ans := output.data[1] shl 8 + output.data[2];
-  end
+  end;
 end;
 
 function TController.SetControllerSpeed(Addr: byte; Value: longword): TModbusError;
@@ -256,7 +291,10 @@ var
 begin
   speed := trunc(value / 100);
   speed2 := not speed;
-  result := WriteState(addr, $4310 , [speed, speed2]);
+//  result := WriteState(addr, $4310 , [speed, speed2]); //Турникет
+
+  result := WriteState(addr, $4310 , [speed]);  //Индикатор
+  result := WriteState(addr, $4312 , [speed2]);
 end;
 
 function TController.SetDemo(Addr, State: byte): TModbusError;
@@ -303,9 +341,38 @@ begin
   result := WriteState(addr, $1009, [OnTime, OffTime, LengthTime]);
 end;
 
+function TController.SetMessage(Addr: byte; AMessage: ansistring): TModbusError;
+var
+  t: array[0..15] of word;
+  i, j: byte;
+begin
+  FillChar(t, SizeOf(t), #0);
+  i := 1;
+  j := 0;
+  while i <= length(AMessage) do
+  begin
+    t[j]:= ord(AMessage[i]);
+    t[j] := t[j] shl 8 + ord(AMessage[i + 1]);
+    i := i + 2;
+    inc(j);
+  end;
+//  move(AMessage[1], t[0], length(AMessage));
+  result := WriteState(addr, $40, t);
+end;
+
 function TController.SetAccumulPas(Addr, State: byte): TModbusError;
 begin
   result := WriteState(addr, $3010, [state]);
+end;
+
+function TController.SetAddress(Addr, NewAddr: byte): TModbusError;
+var
+  t: word;
+begin
+  t := NewAddr;
+  result := WriteState(addr, $4320, [t]);
+  t := not t;
+  result := WriteState(addr, $4322, [t]);
 end;
 
 function TController.SetAfterPermissionPassTime(Addr,
@@ -317,6 +384,11 @@ end;
 function TController.SetAfterStartPassTime(Addr, State: byte): TModbusError;
 begin
   result := WriteState(addr, $3012, [state]);
+end;
+
+function TController.SetBlink(Addr: byte; value: longword): TModbusError;
+begin
+  result := WriteState(addr, $50, [LongRec(value).Words[0], LongRec(value).Words[1]]);
 end;
 
 function TController.SetPassState(Addr, State: byte): TModbusError;

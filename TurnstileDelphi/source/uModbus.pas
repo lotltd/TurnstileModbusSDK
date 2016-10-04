@@ -8,8 +8,10 @@ unit uModbus;
 {$ENDIF}
 
 interface
+
 uses
- SysUtils, cport, WinSock, Sockets{$IFDEF UNDER_DELPHI_XE}, CPortTypes{$ENDIF};
+  SysUtils, cport, WinSock, Sockets{$IFDEF UNDER_DELPHI_XE}, CPortTypes{$ENDIF},
+  syncobjs;
 
 type
   TModbusError = (
@@ -84,17 +86,19 @@ type
 
   TModbus = class
   private
-    FModbusTCP: boolean;
     FPort: TComPort;
+    FModbusTCP: boolean;
     FSocket: TTcpClient;
     FTimeout : byte;
+
+    FSection: TCriticalSection;
 
     function SendTCP(TxSleep: cardinal; datain: AnsiString; var dataout: AnsiString): TModbusError;
     function SendRTU(TxSleep: cardinal; datain: AnsiString; var dataout: AnsiString): TModbusError;
   public
     constructor Create(Port: Integer; Speed: integer); overload;
     constructor Create(Host: string; Port: integer);   overload;
-    destructor Destroy; reintroduce;
+    destructor Destroy; override;//reintroduce;
 
     function Send(ATxSleep: cardinal; Address, Func: byte; data: AnsiString; var dataout: AnsiString): TModbusError;
 
@@ -118,7 +122,10 @@ type
     function Connected: boolean;
 
     property TimeOut: byte read FTimeOut write FTimeOut;
+    property Port: TComPort read FPort write FPort;
   end;
+
+function crc16string(msg: ansistring): ansistring;
 
 implementation
 
@@ -169,6 +176,7 @@ begin
     FPort.Open;
   except
   end;
+  FSection := TCriticalSection.Create;
 end;
 
 function TModbus.Connected: boolean;
@@ -189,6 +197,8 @@ begin
   FSocket.RemoteHost := Host;
   FSocket.RemotePort := IntToStr(Port);
   FSocket.BlockMode := bmBlocking;
+
+  FSection := TCriticalSection.Create;
 end;
 
 destructor TModbus.Destroy;
@@ -203,6 +213,8 @@ begin
     FPort.Close;
     FPort.Destroy;
   end;
+
+  FSection.Free;
 
   inherited;
 end;
@@ -340,62 +352,67 @@ function TModbus.Send(ATxSleep: cardinal; Address, Func: byte; data: AnsiString;
 var
   s: ansistring;
 begin
-  Result := merUndef;
-  dataout := '';
-
-  if Length(data) >= 253 then
-  begin
-    Result := merWrongToLength;
-    exit;
-  end;
-
-  s := AnsiChar(Address) + AnsiChar(Func) + data;
-
-  // send
+  FSection.Enter;
   try
-    if FModbusTCP then
-      Result := SendTCP(ATxSleep, s, dataout)
-    else
-      Result := SendRTU(ATxSleep, s, dataout);
-
-    if Result <> merNone then exit;
-  except
-    sleep(10);
-  end;
-
-  // process
-  if Length(dataout) = 0 then
-  begin
-    Result := merTimeout;
-    exit;
-  end;
-
-  if (Length(dataout) < 4) or (Length(dataout) > 250) then
-  begin
+    Result := merUndef;
     dataout := '';
-    Result := merWrongFromLength;
-    exit;
-  end;
 
-  if dataout[1] <> AnsiChar(Address) then
-  begin
-    Result := merAddressError;
-    exit;
-  end;
-  if dataout[2] <> AnsiChar(Func) then
-  begin
-    Result := merFuncError;
-    if (ord(dataout[2]) xor $80) = Func then
+    if Length(data) >= 253 then
     begin
-      case ord(dataout[3]) of
-        01: Result := merMBFunctionCode;
-        02: Result := merMBDataAddress;
-        03: Result := merMBDataValue;
-        04: Result := merMBFuncExecute;
-        else
-      end;
+      Result := merWrongToLength;
+      exit;
     end;
-    exit;
+
+    s := AnsiChar(Address) + AnsiChar(Func) + data;
+
+    // send
+    try
+      if FModbusTCP then
+        Result := SendTCP(ATxSleep, s, dataout)
+      else
+        Result := SendRTU(ATxSleep, s, dataout);
+
+      if Result <> merNone then exit;
+    except
+      sleep(10);
+    end;
+
+    // process
+    if Length(dataout) = 0 then
+    begin
+      Result := merTimeout;
+      exit;
+    end;
+
+    if (Length(dataout) < 4) or (Length(dataout) > 250) then
+    begin
+      dataout := '';
+      Result := merWrongFromLength;
+      exit;
+    end;
+
+    if dataout[1] <> AnsiChar(Address) then
+    begin
+      Result := merAddressError;
+      exit;
+    end;
+    if dataout[2] <> AnsiChar(Func) then
+    begin
+      Result := merFuncError;
+      if (ord(dataout[2]) xor $80) = Func then
+      begin
+        case ord(dataout[3]) of
+          01: Result := merMBFunctionCode;
+          02: Result := merMBDataAddress;
+          03: Result := merMBDataValue;
+          04: Result := merMBFuncExecute;
+          else
+        end;
+      end;
+      exit;
+    end;
+  finally
+    FSection.Leave;
   end;
 end;
 
