@@ -95,6 +95,8 @@ type
 
     function SendTCP(TxSleep: cardinal; datain: AnsiString; var dataout: AnsiString): TModbusError;
     function SendRTU(TxSleep: cardinal; datain: AnsiString; var dataout: AnsiString): TModbusError;
+
+    procedure OnSocketError(Sender: TObject; SocketError: Integer);
   public
     constructor Create(Port: Integer; Speed: integer); overload;
     constructor Create(Host: string; Port: integer);   overload;
@@ -197,6 +199,9 @@ begin
   FSocket.RemoteHost := Host;
   FSocket.RemotePort := IntToStr(Port);
   FSocket.BlockMode := bmBlocking;
+  FSocket.OnError := OnSocketError;
+  FSocket.Active := true;
+
 
   FSection := TCriticalSection.Create;
 end;
@@ -287,6 +292,13 @@ end;
 function TModbus.ForceSingleCoil(Address: byte; OutputAddr: Word; state: boolean): TModbusError;
 begin
   Result := merNone
+end;
+
+procedure TModbus.OnSocketError(Sender: TObject; SocketError: Integer);
+var
+  i: integer;
+begin
+  i := SocketError;
 end;
 
 function TModbus.PresetSingleRegister(Address: byte; param: TAddrDataRec): TModbusError;

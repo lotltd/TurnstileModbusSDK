@@ -192,12 +192,12 @@ object fmMain: TfmMain
       object edHost: TMaskEdit
         Left = 40
         Top = 16
-        Width = 106
+        Width = 103
         Height = 21
         EditMask = '!099.099.099.099;1; '
         MaxLength = 15
         TabOrder = 0
-        Text = '18 .0  .0  .254'
+        Text = '127.0  .0  .1  '
       end
       object edTCPPort: TEdit
         Left = 40

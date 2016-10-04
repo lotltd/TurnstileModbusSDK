@@ -12,7 +12,7 @@ type
   private
     FController: TController;
     FAddr: byte;
-    FPort: byte;
+    FPort: integer;
     FSpeed: integer;
     FHost: string;
 

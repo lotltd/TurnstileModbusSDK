@@ -1,4 +1,4 @@
-program BarrierEmul;
+program ModbusEmul;
 
 uses
   Forms,
