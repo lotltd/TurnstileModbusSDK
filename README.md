@@ -8,13 +8,13 @@ There are 2 versions of SDK:
 **C++** version for embedded devices [here](https://github.com/lotltd/TurnstileModbusSDK/tree/master/TurnstileCPP)
 
 
-You can look at our turnstiles in our catalog here: http://www.lotgroup.eu/en/index/catalog/
+You can look at our turnstiles in our catalog here: http://old.lotgroup.eu/ru/index/catalog/
 
 Turnstiles that currently works with modbus:
 
-* [Expert](http://www.lotgroup.eu/en/index/catalog/#expert)
-* [Eco](http://www.lotgroup.eu/en/index/catalog/#eco)
-* [Porta](http://www.lotgroup.eu/en/index/catalog/#porta)
+* [Expert](http://old.lotgroup.eu/en/index/catalog/#expert)
+* [Eco](http://old.lotgroup.eu/en/index/catalog/#eco)
+* [Porta](http://old.lotgroup.eu/en/index/catalog/#porta)
 
 Any of the other turnstiles can be work via modbus by request. (now they have our proprietary protocol)
 
