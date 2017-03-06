@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, Vcl.ExtCtrls, uTurnFrame,
-  uTurnDef, uProtocol, Vcl.Menus, uModbusProtocol, System.Math, Web.Win.Sockets;
+  uTurnDef, uProtocol, Vcl.Menus, uModbusProtocol, System.Math, Web.Win.Sockets,
+  Vcl.Mask;
 
 type
   TfmMain = class(TForm)
@@ -13,9 +14,6 @@ type
     btnNew: TSpeedButton;
     btnNewTurn: TSpeedButton;
     btnGo: TSpeedButton;
-    Label1: TLabel;
-    edCom: TEdit;
-    UpDown1: TUpDown;
     Splitter1: TSplitter;
     PopupMenu1: TPopupMenu;
     btnLogClear: TMenuItem;
@@ -33,7 +31,18 @@ type
     btnGenerator: TBitBtn;
     meGeneratorLog: TMemo;
     Timer1: TTimer;
-    TcpServer1: TTcpServer;
+    rgConnect: TRadioGroup;
+    gbTCP: TGroupBox;
+    Label29: TLabel;
+    Label30: TLabel;
+    edHost: TMaskEdit;
+    edTCPPort: TEdit;
+    UpDown17: TUpDown;
+    gbCom: TGroupBox;
+    Label2: TLabel;
+    Label3: TLabel;
+    cbPort: TComboBox;
+    cbSpeed: TComboBox;
     procedure btnCloseClick(Sender: TObject);
     procedure btnNewTurnClick(Sender: TObject);
     procedure btnNewClick(Sender: TObject);
@@ -111,6 +120,7 @@ end;
 procedure TfmMain.btnGoClick(Sender: TObject);
 var
   i: byte;
+  net1, net2, host1, host2: integer;
 begin
   if FIsGo then
   begin
@@ -134,8 +144,17 @@ begin
       FIsGo := false;
       exit;
     end;
-    fComm := TModbusProtocol.Create(StrToInt(edCom.Text));
-//    fComm := TModbusProtocol.Create('127.0.0.1', 502);
+    if rgConnect.ItemIndex = 0 then
+      fComm := TModbusProtocol.Create(cbPort.ItemIndex + 1, StrToInt(cbSpeed.Text))
+    else
+    begin
+      net1 := StrToInt(TrimRight(Copy(edHost.Text, 0, 3)));
+      net2 := StrToInt(TrimRight(Copy(edHost.Text, 5, 3)));
+      host1 := StrToInt(TrimRight(Copy(edHost.Text, 9, 3)));
+      host2 := StrToInt(TrimRight(Copy(edHost.Text, 13, 3)));
+      fComm := TModbusProtocol.Create(IntToStr(net1) + '.' + IntToStr(net2) + '.' +
+        IntToStr(host1) + '.' + IntToStr(host2), StrToInt(edTCPPort.Text));
+    end;
     fComm.OnWriteLog := WriteLog;
     if fComm.CommunicatorState = csConnected then
     begin
@@ -180,7 +199,7 @@ var
   i: byte;
 begin
   addr := IntToStr(Length(ffrarr) + 1);
-  if InputQuery('Введите номер турникета', '', addr) then
+  if InputQuery('Введите номер турникета', 'Номер:', addr) then
   begin
     if (StrToInt64Def(addr, 0) <> 0) and (not Turnstiles.IsAddrExists(StrToInt64Def(addr, 0))) then
     begin
@@ -265,6 +284,9 @@ begin
     (fr as TfrTurn).cbStateOut.ItemIndex := 1;
 
   (fr as TfrTurn).cbEmergency.Checked := turn.Emergency;
+
+  (fr as TfrTurn).edLED1.Text := copy(turn.Indicator, 1, 16);
+  (fr as TfrTurn).edLED2.Text := copy(turn.Indicator, 17, 16);
 end;
 
 procedure TfmMain.FormClose(Sender: TObject; var Action: TCloseAction);

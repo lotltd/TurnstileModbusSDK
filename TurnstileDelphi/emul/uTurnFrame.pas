@@ -32,6 +32,8 @@ type
     edCardEnter: TEdit;
     btnCardEnter: TSpeedButton;
     Timer2: TTimer;
+    edLED1: TEdit;
+    edLED2: TEdit;
     procedure edCardExitKeyPress(Sender: TObject; var Key: Char);
     procedure btnCardExitClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);

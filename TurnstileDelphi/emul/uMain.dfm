@@ -2,8 +2,8 @@ object fmMain: TfmMain
   Left = 261
   Top = 191
   Caption = #1069#1084#1091#1083#1103#1090#1086#1088' '#1090#1091#1088#1085#1080#1082#1077#1090#1086#1074' Modbus ver.1.0'
-  ClientHeight = 647
-  ClientWidth = 857
+  ClientHeight = 683
+  ClientWidth = 932
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,9 +19,9 @@ object fmMain: TfmMain
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 445
-    Top = 41
-    Height = 606
+    Left = 520
+    Top = 137
+    Height = 546
     Align = alRight
     ExplicitLeft = 251
     ExplicitTop = 47
@@ -30,8 +30,8 @@ object fmMain: TfmMain
   object pnlMenu: TPanel
     Left = 0
     Top = 0
-    Width = 857
-    Height = 41
+    Width = 932
+    Height = 137
     Align = alTop
     TabOrder = 0
     object btnNew: TSpeedButton
@@ -126,10 +126,10 @@ object fmMain: TfmMain
       OnClick = btnNewTurnClick
     end
     object btnGo: TSpeedButton
-      Left = 165
+      Left = 240
       Top = 10
       Width = 68
-      Height = 22
+      Height = 25
       GroupIndex = 1
       Caption = #1057#1090#1072#1088#1090
       Enabled = False
@@ -137,65 +137,171 @@ object fmMain: TfmMain
       ShowHint = True
       OnClick = btnGoClick
     end
-    object Label1: TLabel
-      Left = 66
-      Top = 13
-      Width = 27
-      Height = 13
-      Caption = 'COM:'
-    end
-    object edCom: TEdit
-      Left = 99
-      Top = 10
-      Width = 43
-      Height = 21
-      MaxLength = 2
-      NumbersOnly = True
-      TabOrder = 0
-      Text = '10'
-    end
-    object UpDown1: TUpDown
-      Left = 142
-      Top = 10
-      Width = 15
-      Height = 21
-      Associate = edCom
-      Min = 1
-      Max = 16
-      Position = 10
-      TabOrder = 1
-    end
     object cbLog: TCheckBox
-      Left = 251
-      Top = 12
+      Left = 323
+      Top = 15
       Width = 97
       Height = 17
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1083#1086#1075
+      TabOrder = 0
+    end
+    object rgConnect: TRadioGroup
+      Left = 120
+      Top = 3
+      Width = 114
+      Height = 37
+      Columns = 2
+      ItemIndex = 0
+      Items.Strings = (
+        'COM'
+        'TCP')
+      TabOrder = 1
+    end
+    object gbTCP: TGroupBox
+      Left = 176
+      Top = 46
+      Width = 153
+      Height = 81
+      Caption = 'TCP'
+      Enabled = False
       TabOrder = 2
+      object Label29: TLabel
+        Left = 8
+        Top = 21
+        Width = 25
+        Height = 13
+        Caption = 'Host:'
+      end
+      object Label30: TLabel
+        Left = 10
+        Top = 48
+        Width = 22
+        Height = 13
+        Caption = 'Port:'
+      end
+      object edHost: TMaskEdit
+        Left = 40
+        Top = 21
+        Width = 106
+        Height = 21
+        EditMask = '!099.099.099.099;1; '
+        MaxLength = 15
+        TabOrder = 0
+        Text = '127.0  .0  .1  '
+      end
+      object edTCPPort: TEdit
+        Left = 40
+        Top = 48
+        Width = 92
+        Height = 21
+        TabOrder = 1
+        Text = '502'
+      end
+      object UpDown17: TUpDown
+        Left = 132
+        Top = 48
+        Width = 16
+        Height = 21
+        Associate = edTCPPort
+        Max = 65535
+        Position = 502
+        TabOrder = 2
+      end
+    end
+    object gbCom: TGroupBox
+      Left = 8
+      Top = 46
+      Width = 162
+      Height = 81
+      Caption = 'COM'
+      TabOrder = 3
+      object Label2: TLabel
+        Left = 8
+        Top = 21
+        Width = 28
+        Height = 13
+        Caption = #1055#1086#1088#1090':'
+      end
+      object Label3: TLabel
+        Left = 8
+        Top = 48
+        Width = 51
+        Height = 13
+        Caption = #1057#1082#1086#1088#1086#1089#1090#1100':'
+      end
+      object cbPort: TComboBox
+        Left = 67
+        Top = 21
+        Width = 83
+        Height = 21
+        Style = csDropDownList
+        ItemIndex = 9
+        TabOrder = 0
+        Text = 'COM10'
+        Items.Strings = (
+          'COM1'
+          'COM2'
+          'COM3'
+          'COM4'
+          'COM5'
+          'COM6'
+          'COM7'
+          'COM8'
+          'COM9'
+          'COM10'
+          'COM11'
+          'COM12'
+          'COM13'
+          'COM14'
+          'COM15'
+          'COM16')
+      end
+      object cbSpeed: TComboBox
+        Left = 67
+        Top = 48
+        Width = 83
+        Height = 21
+        Style = csDropDownList
+        ItemIndex = 10
+        TabOrder = 1
+        Text = '115200'
+        Items.Strings = (
+          '1200'
+          '1800'
+          '2400'
+          '4800'
+          '7200'
+          '9600'
+          '14400'
+          '19200'
+          '38400'
+          '57600'
+          '115200')
+      end
     end
   end
   object ScrollBox1: TScrollBox
     Left = 0
-    Top = 41
-    Width = 445
-    Height = 606
+    Top = 137
+    Width = 520
+    Height = 546
     Align = alClient
     TabOrder = 1
     object FlowPanel1: TFlowPanel
       Left = 0
       Top = 0
-      Width = 441
-      Height = 602
+      Width = 516
+      Height = 542
       Align = alClient
       ShowCaption = False
       TabOrder = 0
     end
   end
   object Panel1: TPanel
-    Left = 448
-    Top = 41
+    Left = 523
+    Top = 137
     Width = 409
-    Height = 606
+    Height = 546
     Align = alRight
     Caption = 'Panel1'
     TabOrder = 2
@@ -223,18 +329,18 @@ object fmMain: TfmMain
       Left = 1
       Top = 340
       Width = 407
-      Height = 265
+      Height = 205
       Align = alClient
       Caption = #1069#1084#1091#1083#1103#1094#1080#1103' '#1087#1088#1086#1093#1086#1076#1086#1074
       TabOrder = 1
       DesignSize = (
         407
-        265)
+        205)
       object lbCode: TListBox
         Left = 2
         Top = 49
         Width = 164
-        Height = 214
+        Height = 154
         Anchors = [akLeft, akTop, akBottom]
         ItemHeight = 13
         PopupMenu = PopupMenu2
@@ -254,7 +360,7 @@ object fmMain: TfmMain
         Left = 167
         Top = 49
         Width = 237
-        Height = 214
+        Height = 154
         Anchors = [akLeft, akTop, akRight, akBottom]
         ScrollBars = ssVertical
         TabOrder = 2
@@ -286,10 +392,5 @@ object fmMain: TfmMain
     OnTimer = Timer1Timer
     Left = 688
     Top = 504
-  end
-  object TcpServer1: TTcpServer
-    LocalPort = '5025'
-    Left = 80
-    Top = 112
   end
 end

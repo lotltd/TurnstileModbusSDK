@@ -2,47 +2,48 @@ object frTurn: TfrTurn
   Left = 0
   Top = 0
   Width = 242
-  Height = 282
+  Height = 351
   TabOrder = 0
   object gb: TGroupBox
     Left = 0
     Top = 0
     Width = 242
-    Height = 282
+    Height = 351
     Align = alClient
     Caption = '1'
     TabOrder = 0
+    ExplicitHeight = 353
     object Label5: TLabel
-      Left = 5
-      Top = 48
+      Left = 7
+      Top = 112
       Width = 29
       Height = 13
       Caption = #1042#1093#1086#1076':'
     end
     object Label6: TLabel
-      Left = 5
-      Top = 75
+      Left = 7
+      Top = 139
       Width = 37
       Height = 13
       Caption = #1042#1099#1093#1086#1076':'
     end
     object Label7: TLabel
-      Left = 4
-      Top = 189
+      Left = 6
+      Top = 253
       Width = 37
       Height = 13
       Caption = #1042#1099#1093#1086#1076':'
     end
     object Label1: TLabel
-      Left = 5
-      Top = 125
+      Left = 7
+      Top = 189
       Width = 35
       Height = 13
       Caption = #1056#1080#1076#1077#1088':'
     end
     object btnCardExit: TSpeedButton
-      Left = 207
-      Top = 189
+      Left = 215
+      Top = 253
       Width = 23
       Height = 22
       Glyph.Data = {
@@ -83,43 +84,43 @@ object frTurn: TfrTurn
       OnClick = btnCardExitClick
     end
     object Label2: TLabel
-      Left = 6
-      Top = 16
+      Left = 8
+      Top = 80
       Width = 29
       Height = 13
       Caption = #1042#1093#1086#1076':'
     end
     object Label3: TLabel
-      Left = 117
-      Top = 16
+      Left = 119
+      Top = 80
       Width = 37
       Height = 13
       Caption = #1042#1099#1093#1086#1076':'
     end
     object lEnterCount: TLabel
-      Left = 46
-      Top = 16
+      Left = 48
+      Top = 80
       Width = 6
       Height = 13
       Caption = '0'
     end
     object lExitCount: TLabel
-      Left = 168
-      Top = 16
+      Left = 170
+      Top = 80
       Width = 6
       Height = 13
       Caption = '0'
     end
     object Label4: TLabel
-      Left = 5
-      Top = 162
+      Left = 7
+      Top = 226
       Width = 29
       Height = 13
       Caption = #1042#1093#1086#1076':'
     end
     object btnCardEnter: TSpeedButton
-      Left = 208
-      Top = 162
+      Left = 216
+      Top = 226
       Width = 23
       Height = 22
       Glyph.Data = {
@@ -160,8 +161,8 @@ object frTurn: TfrTurn
       OnClick = btnCardEnterClick
     end
     object cbStateIn: TComboBox
-      Left = 46
-      Top = 48
+      Left = 48
+      Top = 112
       Width = 185
       Height = 21
       Style = csSimple
@@ -173,8 +174,8 @@ object frTurn: TfrTurn
         #1089#1074#1086#1073#1086#1076#1085#1099#1081' '#1087#1088#1086#1093#1086#1076)
     end
     object cbStateOut: TComboBox
-      Left = 46
-      Top = 75
+      Left = 48
+      Top = 139
       Width = 185
       Height = 21
       Style = csSimple
@@ -186,8 +187,8 @@ object frTurn: TfrTurn
         #1089#1074#1086#1073#1086#1076#1085#1099#1081' '#1087#1088#1086#1093#1086#1076)
     end
     object cbEmergency: TCheckBox
-      Left = 46
-      Top = 102
+      Left = 48
+      Top = 166
       Width = 121
       Height = 17
       Caption = #1072#1074#1072#1088#1080#1081#1085#1099#1081' '#1087#1088#1086#1093#1086#1076
@@ -201,8 +202,8 @@ object frTurn: TfrTurn
       TabOrder = 2
     end
     object edCardExit: TEdit
-      Left = 45
-      Top = 189
+      Left = 47
+      Top = 253
       Width = 159
       Height = 21
       MaxLength = 10
@@ -211,8 +212,8 @@ object frTurn: TfrTurn
       OnKeyPress = edCardExitKeyPress
     end
     object cbReader: TComboBox
-      Left = 46
-      Top = 125
+      Left = 48
+      Top = 189
       Width = 184
       Height = 21
       TabOrder = 4
@@ -222,8 +223,8 @@ object frTurn: TfrTurn
         #1089#1095#1080#1090#1099#1074#1072#1090#1077#1083#1100' '#1096#1090#1088#1080#1093'-'#1082#1086#1076#1072)
     end
     object btnIn: TButton
-      Left = 46
-      Top = 223
+      Left = 48
+      Top = 287
       Width = 75
       Height = 49
       Caption = #1042#1093#1086#1076
@@ -236,8 +237,8 @@ object frTurn: TfrTurn
       OnClick = btnInClick
     end
     object btnOut: TButton
-      Left = 155
-      Top = 223
+      Left = 157
+      Top = 287
       Width = 75
       Height = 49
       Caption = #1042#1099#1093#1086#1076
@@ -250,23 +251,41 @@ object frTurn: TfrTurn
       OnClick = btnOutClick
     end
     object edCardEnter: TEdit
-      Left = 46
-      Top = 162
+      Left = 48
+      Top = 226
       Width = 159
       Height = 21
       MaxLength = 10
       TabOrder = 7
-      Text = '0F00FBD642'
+      Text = '070092C78D'
       OnKeyPress = edCardExitKeyPress
+    end
+    object edLED1: TEdit
+      Left = 62
+      Top = 16
+      Width = 114
+      Height = 21
+      Enabled = False
+      ReadOnly = True
+      TabOrder = 8
+    end
+    object edLED2: TEdit
+      Left = 62
+      Top = 37
+      Width = 114
+      Height = 21
+      Enabled = False
+      ReadOnly = True
+      TabOrder = 9
     end
   end
   object ImageList1: TImageList
     Height = 24
     Width = 24
-    Left = 120
-    Top = 32
+    Left = 72
+    Top = 184
     Bitmap = {
-      494C0101030005001C0018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000500240018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000001800000001002000000000000024
       0000000000000000000000000000000000000000000000000000000000000000
       00000000000000000000000000000000000000000E0D00013639000000000002
@@ -574,8 +593,8 @@ object frTurn: TfrTurn
     Enabled = False
     Interval = 7000
     OnTimer = Timer1Timer
-    Left = 8
-    Top = 208
+    Left = 168
+    Top = 152
   end
   object Timer2: TTimer
     Enabled = False
