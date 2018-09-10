@@ -12,9 +12,10 @@ You can look at our turnstiles in our catalog here: http://old.lotgroup.eu/ru/in
 
 Turnstiles that currently works with modbus:
 
-* [Expert](http://old.lotgroup.eu/en/index/catalog/#expert)
-* [Eco](http://old.lotgroup.eu/en/index/catalog/#eco)
-* [Porta](http://old.lotgroup.eu/en/index/catalog/#porta)
+* [Expert](https://lotgroup.eu/product/production/turnstiles/tripod-turnstiles/#1472465489914-427a6a37-5001)
+* [Eco](https://lotgroup.eu/product/production/turnstiles/tripod-turnstiles/#1472465489992-d94459d1-af03)
+* [Castle](https://lotgroup.eu/product/production/turnstiles/stand-tripod-turnstiles/#1472465489914-427a6a37-5001)
+* [Porta](https://lotgroup.eu/product/production/turnstiles/swing-turnstiles/#1472470401005-b65c66f6-5e68)
 
 Any of the other turnstiles can be work via modbus by request. (now they have our proprietary protocol)
 
