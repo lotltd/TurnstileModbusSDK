@@ -8,7 +8,7 @@ There are 2 versions of SDK:
 **C++** version for embedded devices [here](https://github.com/lotltd/TurnstileModbusSDK/tree/master/TurnstileCPP)
 
 
-You can look at our turnstiles in our catalog here: http://old.lotgroup.eu/ru/index/catalog/
+You can look at our turnstiles in our catalog [here](https://lotgroup.eu/product/production/turnstiles/)
 
 Turnstiles that currently works with modbus:
 
